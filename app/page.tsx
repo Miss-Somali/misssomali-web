@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -77,6 +78,36 @@ const values = [
 ];
 
 export default function Home() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const targetDate = new Date("2026-08-25T20:00:00+03:00").getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -269,6 +300,25 @@ export default function Home() {
                 <p className="text-[16px] sm:text-[18px] font-light text-[#F5F0E8]/75 leading-[1.65] max-w-xl">
                   The night one woman is crowned Miss Somali 2026 in front of the world.
                 </p>
+
+                {/* Countdown Timer */}
+                <div className="flex items-center gap-3 sm:gap-4 mt-8">
+                  {[
+                    { label: "Days", value: isMounted ? timeLeft.days : 0 },
+                    { label: "Hours", value: isMounted ? timeLeft.hours : 0 },
+                    { label: "Mins", value: isMounted ? timeLeft.minutes : 0 },
+                    { label: "Secs", value: isMounted ? timeLeft.seconds : 0 }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center justify-center bg-white/5 border border-white/10 rounded-2xl p-2 sm:p-3 w-16 sm:w-20 md:w-24 aspect-square text-center shadow-inner">
+                      <span className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#E8C97A] font-mono tracking-tight">
+                        {String(item.value).padStart(2, "0")}
+                      </span>
+                      <span className="text-[9px] sm:text-[10px] tracking-widest text-[#F5F0E8]/50 uppercase font-semibold mt-1">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
                 
                 <a
                   href="#events"

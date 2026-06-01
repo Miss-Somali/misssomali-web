@@ -48,12 +48,12 @@ const texts = {
 
 
 
-const trendingContestants = [
-  { id: 1, name: "Hodan Warsame", image: "/images/contestant1.jpeg", rank: "Trending #1" },
-  { id: 2, name: "Ayan Cabdi", image: "/images/contestant2.jpeg", rank: "Trending #2" },
-  { id: 3, name: "Ifrah Maxamed", image: "/images/contestant3.jpeg", rank: "Trending #3" },
-  { id: 4, name: "Sahra Nuur", image: "/images/contestant4.jpeg", rank: "Trending #4" },
-  { id: 5, name: "Ilhan Osman", image: "/images/contestant5.jpeg", rank: "Trending #5" },
+const contestants = [
+  { id: 1, name: "Hodan Warsame", image: "/images/contestant1.jpeg", rank: "Contestant No. 1" },
+  { id: 2, name: "Ayan Cabdi", image: "/images/contestant2.jpeg", rank: "Contestant No. 2" },
+  { id: 3, name: "Ifrah Maxamed", image: "/images/contestant3.jpeg", rank: "Contestant No. 3" },
+  { id: 4, name: "Sahra Nuur", image: "/images/contestant4.jpeg", rank: "Contestant No. 4" },
+  { id: 5, name: "Ilhan Osman", image: "/images/contestant5.jpeg", rank: "Contestant No. 5" },
 ];
 
 
@@ -117,25 +117,25 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Trending Contestants Section */}
-        <section id="trending" className="bg-[#0B2D6B] py-28 border-t border-[#E8C97A]/5">
+        {/* Contestants Section */}
+        <section id="contestants" className="bg-[#0B2D6B] py-28 border-t border-[#E8C97A]/5">
           <div className="grid-container">
             <div className="grid-12">
               <div className="col-span-12 text-center mb-16">
                 <span className="text-[12px] font-semibold tracking-[0.02em] leading-[1.7] text-[#E8C97A] block mb-2">
-                  Trending Now
+                  Miss Somali 2026
                 </span>
                 <h2 className="text-[28px] lg:text-[40px] font-bold text-[#FFFFFF] tracking-[-0.02em] leading-[1.15] mb-6">
-                  Trending Contestants
+                  Meet The Contestants
                 </h2>
                 <p className="text-[#F5F0E8]/70 text-[16px] font-normal leading-[1.7] tracking-normal max-w-2xl mx-auto">
-                  Meet the frontrunners of Miss Somali 2026 who are capturing hearts and driving conversations across the community.
+                  The women competing for the Miss Somali 2026 crown. Each one representing her community, her culture, and her story.
                 </p>
               </div>
 
               {/* Centered Row Container for the 5 circles */}
               <div className="col-span-12 grid grid-cols-5 gap-2 sm:gap-4 md:gap-6 lg:gap-8 justify-items-center">
-                {trendingContestants.map((tc) => (
+                {contestants.map((tc) => (
                   <div key={tc.id} className="flex flex-col items-center group w-full max-w-[200px]">
                     <div className="relative w-14 h-14 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-44 lg:h-44 rounded-full p-[2px] md:p-[3px] bg-gradient-to-tr from-[#E8C97A]/30 to-[#E8C97A] transition-all duration-300 group-hover:scale-[1.03]">
                       <div className="w-full h-full rounded-full bg-[#0B2D6B] p-[1.5px] md:p-[3px] flex items-center justify-center">
@@ -354,7 +354,7 @@ export default function Home() {
                 {[
                   { name: "Home", href: "#home" },
                   { name: "The Journey", href: "#journey" },
-                  { name: "Contestants", href: "#trending" },
+                  { name: "Contestants", href: "#contestants" },
                   { name: "Events", href: "#events" },
                   { name: "About", href: "#about" }
                 ].map((link) => (

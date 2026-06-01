@@ -295,6 +295,31 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Apply CTA Section */}
+        <section id="apply-cta" className="bg-[#E8C97A] py-20 md:py-24 text-center">
+          <div className="grid-container">
+            <div className="grid-12">
+              <div className="col-span-12 max-w-3xl mx-auto flex flex-col items-center">
+                <h2 className="text-[32px] sm:text-[44px] md:text-[50px] font-extrabold text-[#071E4A] tracking-tight leading-[1.15] mb-6">
+                  Your Moment Will Not Wait.
+                </h2>
+                <p className="text-[#071E4A]/85 text-[16px] sm:text-[18px] font-light leading-[1.65] mb-4">
+                  Applications for Miss Somali 2026 are open now. This is your chance to represent your culture, your community, and your story on the world stage.
+                </p>
+                <p className="text-[#071E4A]/90 text-[14px] sm:text-[15px] font-bold italic">
+                  Applications close soon. Do not miss your chance.
+                </p>
+                <a
+                  href="#apply"
+                  className="bg-[#071E4A] hover:bg-[#0B2D6B] text-[#FFFFFF] px-10 py-4 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-colors duration-200 mt-8 inline-block shadow-md hover:shadow-lg"
+                >
+                  Apply Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Journey Section */}
         <section id="journey" className="bg-[#071E4A] py-28 border-t border-[#E8C97A]/5">
           <div className="grid-container">

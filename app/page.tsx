@@ -237,6 +237,64 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Grand Finale Event Section */}
+        <section id="grand-finale" className="bg-[#071E4A] py-20 md:py-28 border-b border-white/5">
+          <div className="grid-container">
+            <div className="grid-12 items-center gap-y-12 lg:gap-x-12">
+              
+              {/* Left Column: Event Info */}
+              <div className="col-span-12 lg:col-span-6 flex flex-col justify-center text-left items-start">
+                <div className="mb-6">
+                  <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-[#E8C97A] bg-[#E8C97A]/10 border border-[#E8C97A]/20 px-3.5 py-1 rounded-full inline-block">
+                    The Grand Finale
+                  </span>
+                </div>
+                
+                <h2 className="text-[32px] sm:text-[42px] font-extrabold text-white tracking-tight leading-[1.15] mb-4">
+                  Miss Somali 2026 Grand Finale
+                </h2>
+                
+                {/* Location & Date Details */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 my-6 text-[15px] sm:text-[16px] text-[#F5F0E8]/95 font-medium">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#E8C97A] text-[18px]">📍</span>
+                    <span>Nairobi, Kenya</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#E8C97A] text-[18px]">📅</span>
+                    <span>25 August 2026</span>
+                  </div>
+                </div>
+                
+                <p className="text-[16px] sm:text-[18px] font-light text-[#F5F0E8]/75 leading-[1.65] max-w-xl">
+                  The night one woman is crowned Miss Somali 2026 in front of the world.
+                </p>
+                
+                <a
+                  href="#events"
+                  className="inline-block bg-[#E8C97A] hover:bg-[#F0D898] text-[#071E4A] px-8 py-3.5 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-colors duration-200 mt-8 text-center border border-[#E8C97A]/20"
+                >
+                  View Event Details
+                </a>
+              </div>
+
+              {/* Right Column: Event Image */}
+              <div className="col-span-12 lg:col-span-6">
+                <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-white/10">
+                  <Image
+                    src="/images/image1.jpeg"
+                    alt="Miss Somali 2026 Grand Finale Event"
+                    fill
+                    sizes="(max-w-768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* Journey Section */}
         <section id="journey" className="bg-[#071E4A] py-28 border-t border-[#E8C97A]/5">
           <div className="grid-container">

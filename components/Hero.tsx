@@ -64,23 +64,6 @@ export default function Hero() {
                 </a>
               </div>
 
-              {/* Statistics Block */}
-              <div className="mt-12 flex items-center justify-center lg:justify-start space-x-6 sm:space-x-10 border-t border-white/10 pt-8 w-full max-w-[480px]">
-                <div>
-                  <div className="text-[26px] font-extrabold text-white leading-none">18</div>
-                  <div className="text-[12px] font-semibold text-[#F5F0E8]/50 mt-1.5">Delegates</div>
-                </div>
-                <div className="h-8 w-[1px] bg-white/10" />
-                <div>
-                  <div className="text-[26px] font-extrabold text-white leading-none">01</div>
-                  <div className="text-[12px] font-semibold text-[#F5F0E8]/50 mt-1.5">Queen</div>
-                </div>
-                <div className="h-8 w-[1px] bg-white/10" />
-                <div>
-                  <div className="text-[26px] font-extrabold text-white leading-none">Global</div>
-                  <div className="text-[12px] font-semibold text-[#F5F0E8]/50 mt-1.5">Broadcast</div>
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Portrait Image & Backdrops (Columns 6-12 on desktop, 12 on mobile) */}

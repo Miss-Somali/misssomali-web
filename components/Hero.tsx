@@ -70,13 +70,23 @@ export default function Hero() {
 
               {/* Model Image wrapper */}
               <div className="relative w-full h-[55vh] sm:h-[60vh] lg:h-full max-w-[380px] sm:max-w-[460px] lg:max-w-none mx-auto z-10 pb-0 mb-0">
+                {/* Crown Background Image */}
+                <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] sm:w-[160%] sm:h-[160%] lg:w-[180%] lg:h-[180%] z-0 pointer-events-none opacity-25">
+                  <Image
+                    src="/images/crown.png"
+                    alt="Crown Backdrop"
+                    fill
+                    sizes="(max-w-768px) 100vw, 50vw"
+                    className="object-contain"
+                  />
+                </div>
                 <Image
                   src="/images/misssomalipsd1.png"
                   alt="Miss Somali - Coronation"
                   fill
                   priority
                   sizes="(max-w-768px) 100vw, 50vw"
-                  className="object-contain object-bottom"
+                  className="object-contain object-bottom z-10"
                 />
               </div>
             </div>

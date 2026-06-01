@@ -269,24 +269,29 @@ export default function Home() {
         </section>
 
         {/* Grand Finale Event Section */}
-        <section id="grand-finale" className="bg-[#071E4A] py-20 md:py-28 border-b border-white/5">
+        <section id="grand-finale" className="bg-[#071E4A] py-28 border-b border-white/5">
           <div className="grid-container">
             <div className="grid-12 items-center gap-y-12 lg:gap-x-12">
               
               {/* Left Column: Event Info */}
               <div className="col-span-12 lg:col-span-6 flex flex-col justify-center text-left items-start">
+                {/* Luxury Label Badge */}
                 <div className="mb-6">
-                  <span className="text-[11px] font-bold tracking-[0.08em] uppercase text-[#E8C97A] bg-[#E8C97A]/10 border border-[#E8C97A]/20 px-3.5 py-1 rounded-full inline-block">
+                  <span className="text-[#E8C97A] tracking-[0.08em] uppercase text-[11px] font-bold">
                     The Grand Finale
                   </span>
                 </div>
                 
-                <h2 className="text-[32px] sm:text-[42px] font-extrabold text-white tracking-tight leading-[1.15] mb-4">
+                {/* Clean Title */}
+                <h2 className="text-[38px] lg:text-[48px] font-extrabold text-white tracking-[-0.02em] leading-[1.15]">
                   Miss Somali 2026 Grand Finale
                 </h2>
+
+                {/* Luxury Divider */}
+                <div className="w-16 h-[2px] bg-[#E8C97A] my-6 rounded-full" />
                 
-                {/* Location & Date Details */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 my-6 text-[15px] sm:text-[16px] text-[#F5F0E8]/95 font-medium">
+                {/* Location & Date Details in Clean Text Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 my-6 text-[15px] sm:text-[16px] text-[#F5F0E8]/90 font-medium">
                   <div className="flex items-center space-x-2">
                     <span className="text-[#E8C97A] text-[18px]">📍</span>
                     <span>Nairobi, Kenya</span>
@@ -297,11 +302,12 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <p className="text-[16px] sm:text-[18px] font-light text-[#F5F0E8]/75 leading-[1.65] max-w-xl">
+                {/* Slogan Supporting Line */}
+                <p className="text-[15px] font-light text-[#F5F0E8]/70 leading-[1.7] max-w-xl">
                   The night one woman is crowned Miss Somali 2026 in front of the world.
                 </p>
 
-                {/* Countdown Timer */}
+                {/* Clean Countdown Timer */}
                 <div className="flex items-center gap-3 sm:gap-4 mt-8">
                   {[
                     { label: "Days", value: isMounted ? timeLeft.days : 0 },
@@ -309,8 +315,8 @@ export default function Home() {
                     { label: "Mins", value: isMounted ? timeLeft.minutes : 0 },
                     { label: "Secs", value: isMounted ? timeLeft.seconds : 0 }
                   ].map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center justify-center bg-white/5 border border-white/10 rounded-2xl p-2 sm:p-3 w-16 sm:w-20 md:w-24 aspect-square text-center shadow-inner">
-                      <span className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#E8C97A] font-mono tracking-tight">
+                    <div key={idx} className="flex flex-col items-center justify-center bg-white/5 border border-white/10 rounded-2xl p-3 sm:p-4 w-16 sm:w-20 md:w-24 aspect-square text-center">
+                      <span className="text-[22px] sm:text-[28px] md:text-[32px] font-bold text-[#E8C97A] font-mono tracking-tight">
                         {String(item.value).padStart(2, "0")}
                       </span>
                       <span className="text-[9px] sm:text-[10px] tracking-widest text-[#F5F0E8]/50 uppercase font-semibold mt-1">
@@ -320,9 +326,10 @@ export default function Home() {
                   ))}
                 </div>
                 
+                {/* Clean CTA Button */}
                 <a
                   href="#events"
-                  className="inline-block bg-[#E8C97A] hover:bg-[#F0D898] text-[#071E4A] px-8 py-3.5 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-colors duration-200 mt-8 text-center border border-[#E8C97A]/20"
+                  className="bg-[#E8C97A] hover:bg-[#F0D898] text-[#071E4A] px-8 py-4 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-colors duration-200 mt-8 inline-block text-center border border-[#E8C97A]/25"
                 >
                   View Event Details
                 </a>
@@ -330,7 +337,7 @@ export default function Home() {
 
               {/* Right Column: Event Image */}
               <div className="col-span-12 lg:col-span-6">
-                <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-white/10">
+                <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 shadow-md">
                   <Image
                     src="/images/image1.jpeg"
                     alt="Miss Somali 2026 Grand Finale Event"

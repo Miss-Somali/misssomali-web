@@ -22,9 +22,8 @@ export default function Hero() {
             {/* Left Column: Content & Stats (Columns 1-5 on desktop, 12 on mobile) */}
             <div className="col-span-12 lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* Luxury Badge */}
-              <div className="flex items-center space-x-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md mb-6">
-                <span className="w-1.5 h-1.5 bg-[#E8C97A] rounded-full" />
-                <span className="text-[12px] font-semibold tracking-normal text-[#F5F0E8]/90">
+              <div className="mb-6">
+                <span className="text-[#E8C97A] tracking-[0.08em] uppercase text-[11px] font-bold">
                   Miss Somali 2026
                 </span>
               </div>
@@ -46,16 +45,16 @@ export default function Hero() {
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 w-full">
                 <a
                   href="#apply"
-                  className="w-full sm:w-auto relative bg-[#E8C97A] text-[#1A0524] px-8 py-4 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-all duration-300 shadow-[0_5px_25px_rgba(232,201,122,0.3)] hover:shadow-[0_8px_35px_rgba(232,201,122,0.5)] hover:-translate-y-0.5 active:translate-y-0 inline-block text-center border border-[#E8C97A]/25"
+                  className="w-full sm:w-auto bg-[#E8C97A] hover:bg-[#F0D898] text-[#1A0524] px-8 py-4 rounded-full font-bold text-[14px] leading-none tracking-[0.02em] transition-colors duration-200 inline-block text-center border border-[#E8C97A]/25"
                 >
                   Apply Now
                 </a>
                 <a
                   href="#journey"
-                  className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-full border border-white/10 hover:border-[#E8C97A]/30 transition-all duration-300 group"
+                  className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-white/5 hover:bg-white/10 text-white px-8 py-4 rounded-full border border-white/10 transition-colors duration-200"
                 >
                   <span className="text-[14px] font-bold tracking-[0.02em] leading-none">Learn More</span>
-                  <svg className="w-4 h-4 text-[#E8C97A] group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-[#E8C97A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
                   </svg>
                 </a>

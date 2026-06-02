@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ----------------------------------------------------
+// ENUMS
+// ----------------------------------------------------
+
+enum Role {
+  ADMIN
+  CONTESTANT
+}
+
+enum Status {
+  PENDING
+  SHORTLISTED
+  APPROVED
+  REJECTED
+}
+
+enum PhotoType {
+  PROFILE
+  FULL_BODY
+  PORTRAIT
+  GALLERY
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum MediaCategory {
+  EVENTS
+  BACKSTAGE
+  FINALISTS
+  PROMO
+}
+
+enum ActionType {
+  APPROVE
+  REJECT
+  PUBLISH
+  DELETE
+  UPDATE
+}
+
+enum TargetType {
+  CONTESTANT
+  EVENT
+  MEDIA
+  APPLICATION
+}
+
+enum NotificationType {
+  SYSTEM
+  APPLICATION_UPDATE
+  EVENT
+}
+
+// ----------------------------------------------------
+// MODELS
+// ----------------------------------------------------
+
+model User {
+  id                   String             @id @default(uuid())
+  email                String             @unique
+  fullName             String
+  phone                String?
+  role                 Role               @default(CONTESTANT)
+  country              String?
+  createdAt            DateTime           @default(now())
+  lastLogin            DateTime?
+  
+  // Relations
+  profile              ContestantProfile?
+  applications         Application[]      @relation("UserApplications")
+  reviewedApplications Application[]      @relation("AdminReviews")
+  notifications        Notification[]
+  auditLogs            AuditLog[]
+}
+
+model ContestantProfile {
+  id             String    @id @default(uuid())
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio            String    @db.Text
+  dateOfBirth    DateTime
+  city           String
+  country        String
+  height         Float?
+  occupation     String?
+  educationLevel String?
+  status         Status    @default(PENDING)
+  isPublished    Boolean   @default(false)
+  appliedAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  // Relations
+  photos         Photo[]
+
+  // Indexes for faster admin filtering and pagination
+  @@index([status])
+  @@index([isPublished])
+}
+
+model Application {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation("UserApplications", fields: [userId], references: [id], onDelete: Cascade)
+  personalInfo   Json
+  backgroundInfo Json
+  motivation     String    @db.Text
+  achievements   Json      // Can be a string array or a structured achievements list
+  status         Status    @default(PENDING)
+  submittedAt    DateTime  @default(now())
+  reviewedById   String?
+  reviewedBy     User?     @relation("AdminReviews", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt     DateTime?
+
+  // Indexes for query optimization
+  @@index([userId])
+  @@index([status])
+  @@index([reviewedById])
+}
+
+model Photo {
+  id           String            @id @default(uuid())
+  contestantId String
+  contestant   ContestantProfile @relation(fields: [contestantId], references: [id], onDelete: Cascade)
+  url          String
+  type         PhotoType
+  uploadedAt   DateTime          @default(now())
+
+  @@index([contestantId])
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  location    String
+  eventDate   DateTime
+  coverImage  String
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([isPublished])
+  @@index([eventDate])
+}
+
+model MediaGallery {
+  id          String        @id @default(uuid())
+  title       String
+  url         String
+  type        MediaType
+  category    MediaCategory
+  isPublished Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+
+  @@index([isPublished])
+  @@index([category])
+}
+
+model AuditLog {
+  id         String     @id @default(uuid())
+  adminId    String
+  admin      User       @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  actionType ActionType
+  targetType TargetType
+  targetId   String
+  metadata   Json?
+  createdAt  DateTime   @default(now())
+
+  @@index([adminId])
+  @@index([targetId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String           @db.Text
+  type      NotificationType
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}

@@ -148,24 +148,24 @@ export default function MediaPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#071E4A]">Media Gallery</h1>
-          <p className="text-sm text-[#071E4A]/60 mt-1">
+          <h1 className="text-2xl font-extrabold text-dark dark:text-white">Media Gallery</h1>
+          <p className="text-sm text-dark-5 dark:text-dark-6 mt-1">
             Publish event photos, promo videos, backstage highlight clips, and finalist cards.
           </p>
         </div>
         <button
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center px-4 py-2.5 bg-[#0B2D6B] hover:bg-[#071E4A] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+          className="inline-flex items-center px-4 py-2.5 bg-primary hover:bg-dark text-white rounded-xl text-xs font-bold transition-all shadow-1"
         >
           <Plus className="h-4.5 w-4.5 mr-1" /> Publish New Media
         </button>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-5 shadow-1 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
         <div className="flex items-center space-x-2">
           <Sliders className="h-4 w-4 text-gray-400" />
-          <span className="text-xs font-bold text-[#071E4A]/60 uppercase tracking-wider">Category:</span>
+          <span className="text-xs font-bold text-dark-5 dark:text-dark-6 uppercase tracking-wider">Category:</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {["all", "events", "backstage", "finalists", "promo"].map((cat) => (
@@ -177,8 +177,8 @@ export default function MediaPage() {
               }}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize border transition-all ${
                 categoryFilter === cat
-                  ? "bg-[#0B2D6B] border-[#0B2D6B] text-white"
-                  : "bg-white border-[#E8E8E8] text-[#071E4A] hover:bg-gray-50"
+                  ? "bg-primary border-primary text-white"
+                  : "bg-white border-stroke dark:border-dark-3 text-dark dark:text-white hover:bg-gray-50"
               }`}
             >
               {cat}
@@ -189,24 +189,24 @@ export default function MediaPage() {
 
       {/* Grid gallery */}
       {loading ? (
-        <div className="py-20 flex flex-col justify-center items-center bg-white border border-[#E8E8E8] rounded-2xl shadow-sm">
-          <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B] mb-2" />
-          <p className="text-xs font-semibold text-[#071E4A]/60">Loading gallery items...</p>
+        <div className="py-20 flex flex-col justify-center items-center bg-white border border-stroke dark:border-dark-3 rounded-[10px] shadow-1">
+          <Loader2 className="animate-spin h-8 w-8 text-primary mb-2" />
+          <p className="text-xs font-semibold text-dark-5 dark:text-dark-6">Loading gallery items...</p>
         </div>
       ) : items.length === 0 ? (
-        <div className="py-20 text-center bg-white border border-[#E8E8E8] rounded-2xl shadow-sm">
-          <p className="text-sm font-semibold text-[#071E4A]/60">No media found in this category.</p>
+        <div className="py-20 text-center bg-white border border-stroke dark:border-dark-3 rounded-[10px] shadow-1">
+          <p className="text-sm font-semibold text-dark-5 dark:text-dark-6">No media found in this category.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {items.map((item) => (
-            <div key={item.id} className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-all duration-200">
+            <div key={item.id} className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] overflow-hidden shadow-1 flex flex-col hover:shadow-2 transition-all duration-200">
               
               {/* Media Preview Box */}
               <div className="relative aspect-video bg-gray-50">
                 {item.type === "video" ? (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-white p-4 text-center">
-                    <Video className="h-8 w-8 mb-2 text-[#E8C97A]" />
+                    <Video className="h-8 w-8 mb-2 text-primary" />
                     <span className="text-[10px] font-bold truncate w-full">{item.title}</span>
                   </div>
                 ) : (
@@ -219,7 +219,7 @@ export default function MediaPage() {
 
                 {/* Published status badge overlay */}
                 <div className="absolute top-2 left-2">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-sm ${
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-1 ${
                     item.isPublished 
                       ? "bg-emerald-50 text-emerald-800 border border-emerald-200" 
                       : "bg-amber-50 text-amber-800 border border-amber-200"
@@ -230,7 +230,7 @@ export default function MediaPage() {
 
                 {/* Category tag overlay */}
                 <div className="absolute bottom-2 right-2">
-                  <span className="inline-flex items-center px-2 py-0.5 bg-[#0B2D6B]/90 text-white rounded text-[8px] font-extrabold uppercase tracking-wide">
+                  <span className="inline-flex items-center px-2 py-0.5 bg-primary/90 text-white rounded text-[8px] font-extrabold uppercase tracking-wide">
                     {item.category}
                   </span>
                 </div>
@@ -238,8 +238,8 @@ export default function MediaPage() {
 
               {/* Card Footer Details */}
               <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                <h4 className="text-xs font-bold text-[#071E4A] line-clamp-1">{item.title}</h4>
-                <div className="flex items-center justify-between pt-2 border-t border-[#E8E8E8]">
+                <h4 className="text-xs font-bold text-dark dark:text-white line-clamp-1">{item.title}</h4>
+                <div className="flex items-center justify-between pt-2 border-t border-stroke dark:border-dark-3">
                   <button
                     onClick={() => handleTogglePublish(item.id, item.isPublished)}
                     className={`inline-flex items-center text-[10px] font-bold ${
@@ -275,8 +275,8 @@ export default function MediaPage() {
       {/* Upload/Creation Overlay Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[#E8E8E8] max-w-md w-full p-6 shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-[#071E4A]">Publish Media Item</h3>
+          <div className="bg-white rounded-[10px] border border-stroke dark:border-dark-3 max-w-md w-full p-6 shadow-3 space-y-4">
+            <h3 className="text-base font-bold text-dark dark:text-white">Publish Media Item</h3>
             
             <form onSubmit={handleMockUpload} className="space-y-4">
               <div>
@@ -289,7 +289,7 @@ export default function MediaPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Preliminary Round Gala - Opening"
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
@@ -300,7 +300,7 @@ export default function MediaPage() {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="image">Image (Photo)</option>
                   <option value="video">Video Clip</option>
@@ -314,7 +314,7 @@ export default function MediaPage() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="events">Events</option>
                   <option value="backstage">Backstage</option>
@@ -331,7 +331,7 @@ export default function MediaPage() {
                   <button
                     type="button"
                     onClick={handleAutoGenerateUrl}
-                    className="text-[10px] text-[#0B2D6B] font-bold hover:underline"
+                    className="text-[10px] text-primary font-bold hover:underline"
                   >
                     Generate Mock Image Link
                   </button>
@@ -342,7 +342,7 @@ export default function MediaPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://r2.misssomali.com/uploads/..."
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
@@ -352,9 +352,9 @@ export default function MediaPage() {
                   id="modalIsPublished"
                   checked={isPublished}
                   onChange={(e) => setIsPublished(e.target.checked)}
-                  className="rounded border-[#E8E8E8] text-[#0B2D6B] focus:ring-[#0B2D6B]"
+                  className="rounded border-stroke dark:border-dark-3 text-primary focus:ring-primary"
                 />
-                <label htmlFor="modalIsPublished" className="text-xs font-bold text-[#071E4A] cursor-pointer">
+                <label htmlFor="modalIsPublished" className="text-xs font-bold text-dark dark:text-white cursor-pointer">
                   Publish immediately (Publicly visible in gallery)
                 </label>
               </div>
@@ -363,14 +363,14 @@ export default function MediaPage() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 border border-[#E8E8E8] rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-stroke dark:border-dark-3 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors"
                   disabled={uploading}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#0B2D6B] hover:bg-[#071E4A] text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
+                  className="px-4 py-2 bg-primary hover:bg-dark text-white rounded-xl text-xs font-bold transition-colors shadow-1"
                   disabled={uploading}
                 >
                   {uploading ? <Loader2 className="animate-spin h-4 w-4" /> : "Save Entry"}

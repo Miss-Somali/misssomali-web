@@ -13,9 +13,7 @@ import {
   User,
   Loader2
 } from "lucide-react";
-import { SidebarProvider } from "@/components/dashboard/Layouts/sidebar/sidebar-context";
-import { Sidebar } from "@/components/dashboard/Layouts/sidebar";
-import { Header } from "@/components/dashboard/Layouts/header";
+import { DashboardShell } from "@/components/dashboard/Layouts/DashboardShell";
 
 interface UserProfileData {
   authenticated: boolean;
@@ -85,8 +83,8 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center">
-        <Loader2 className="animate-spin h-10 w-10 text-[#0B2D6B] mb-4" />
-        <p className="text-sm font-semibold text-[#071E4A]/70">Loading contestant portal...</p>
+        <Loader2 className="animate-spin h-10 w-10 text-primary mb-4" />
+        <p className="text-sm font-semibold text-dark-5">Loading contestant portal...</p>
       </div>
     );
   }
@@ -104,37 +102,22 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   ];
 
   return (
-    <SidebarProvider>
-      <PortalContext.Provider value={{ profile, refreshProfile: fetchProfile, loading }}>
-        <div className="flex min-h-screen bg-gray-2 dark:bg-[#020D1A]">
-          {/* Collapsible Left Sidebar */}
-          <Sidebar
-            navigation={navigation}
-            brandText="Miss Somali Portal"
-            onSignOut={handleSignOut}
-          />
-
-          {/* Content Display Panel */}
-          <div className="flex-1 flex flex-col min-w-0">
-            <Header
-              user={{
-                name: profile.fullName,
-                email: profile.email,
-                role: "contestant",
-              }}
-              title="Contestant Portal"
-              subtitle="Track your application and event milestones"
-              onSignOut={handleSignOut}
-              profileUrl="/portal/profile"
-              settingsUrl="/portal/profile"
-            />
-
-            <main className="isolate mx-auto w-full overflow-hidden p-4 md:p-6 2xl:p-10 bg-gray-2 dark:bg-[#020D1A] min-h-[calc(100vh-80px)]">
-              {children}
-            </main>
-          </div>
-        </div>
-      </PortalContext.Provider>
-    </SidebarProvider>
+    <PortalContext.Provider value={{ profile, refreshProfile: fetchProfile, loading }}>
+      <DashboardShell
+        navigation={navigation}
+        user={{
+          name: profile.fullName,
+          email: profile.email,
+          role: "contestant",
+        }}
+        title="Contestant Portal"
+        subtitle="Track your application and event milestones"
+        onSignOut={handleSignOut}
+        profileUrl="/portal/profile"
+        settingsUrl="/portal/profile"
+      >
+        {children}
+      </DashboardShell>
+    </PortalContext.Provider>
   );
 }

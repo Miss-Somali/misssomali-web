@@ -14,9 +14,7 @@ import {
   History,
   Loader2
 } from "lucide-react";
-import { SidebarProvider } from "@/components/dashboard/Layouts/sidebar/sidebar-context";
-import { Sidebar } from "@/components/dashboard/Layouts/sidebar";
-import { Header } from "@/components/dashboard/Layouts/header";
+import { DashboardShell } from "@/components/dashboard/Layouts/DashboardShell";
 
 interface UserProfileData {
   authenticated: boolean;
@@ -86,8 +84,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center">
-        <Loader2 className="animate-spin h-10 w-10 text-[#0B2D6B] mb-4" />
-        <p className="text-sm font-semibold text-[#071E4A]/70">Loading Admin Control Panel...</p>
+        <Loader2 className="animate-spin h-10 w-10 text-primary mb-4" />
+        <p className="text-sm font-semibold text-dark-5">Loading Admin Control Panel...</p>
       </div>
     );
   }
@@ -106,37 +104,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <SidebarProvider>
-      <AdminContext.Provider value={{ profile, refreshProfile: fetchProfile, loading }}>
-        <div className="flex min-h-screen bg-gray-2 dark:bg-[#020D1A]">
-          {/* Collapsible Left Sidebar */}
-          <Sidebar
-            navigation={navigation}
-            brandText="Miss Somali Admin"
-            onSignOut={handleSignOut}
-          />
-
-          {/* Content Display Panel */}
-          <div className="flex-1 flex flex-col min-w-0">
-            <Header
-              user={{
-                name: profile.fullName,
-                email: profile.email,
-                role: "admin",
-              }}
-              title="Control Panel"
-              subtitle="Miss Somali Organization Administrator"
-              onSignOut={handleSignOut}
-              profileUrl="/admin/settings"
-              settingsUrl="/admin/settings"
-            />
-
-            <main className="isolate mx-auto w-full overflow-hidden p-4 md:p-6 2xl:p-10 bg-gray-2 dark:bg-[#020D1A] min-h-[calc(100vh-80px)]">
-              {children}
-            </main>
-          </div>
-        </div>
-      </AdminContext.Provider>
-    </SidebarProvider>
+    <AdminContext.Provider value={{ profile, refreshProfile: fetchProfile, loading }}>
+      <DashboardShell
+        navigation={navigation}
+        user={{
+          name: profile.fullName,
+          email: profile.email,
+          role: "admin",
+        }}
+        title="Control Panel"
+        subtitle="Miss Somali Organization Administrator"
+        onSignOut={handleSignOut}
+        profileUrl="/admin/settings"
+        settingsUrl="/admin/settings"
+      >
+        {children}
+      </DashboardShell>
+    </AdminContext.Provider>
   );
 }

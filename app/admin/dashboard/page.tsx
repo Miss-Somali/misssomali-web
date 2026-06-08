@@ -67,10 +67,8 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     async function loadDashboard() {
       try {
         const res = await fetch("/api/admin/dashboard");
@@ -90,18 +88,18 @@ export default function DashboardPage() {
     loadDashboard();
   }, []);
 
-  if (!mounted || loading) {
+  if (loading) {
     return (
       <div className="flex flex-col justify-center items-center py-24 min-h-[50vh]">
-        <Loader2 className="animate-spin h-10 w-10 text-[#0B2D6B] mb-4" />
-        <span className="text-sm font-semibold text-[#071E4A]/70 dark:text-dark-6">Loading dashboard statistics...</span>
+        <Loader2 className="animate-spin h-10 w-10 text-primary mb-4" />
+        <span className="text-sm font-semibold text-dark-5 dark:text-dark-6 dark:text-dark-6">Loading dashboard statistics...</span>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 text-center max-w-xl mx-auto my-12">
+      <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-[10px] p-6 text-center max-w-xl mx-auto my-12">
         <p className="text-red-800 dark:text-red-400 font-semibold">{error || "Could not load stats"}</p>
       </div>
     );
@@ -145,8 +143,8 @@ export default function DashboardPage() {
   ];
 
   const quickActions = [
-    { name: "Broadcast Msg", href: "/admin/notifications", icon: Bell, border: "hover:border-[#E8C97A]" },
-    { name: "Create Event", href: "/admin/events", icon: Calendar, border: "hover:border-[#0B2D6B]" },
+    { name: "Broadcast Msg", href: "/admin/notifications", icon: Bell, border: "hover:border-primary" },
+    { name: "Create Event", href: "/admin/events", icon: Calendar, border: "hover:border-primary" },
     { name: "System Logs", href: "/admin/audit-logs", icon: History, border: "hover:border-slate-400" },
     { name: "Settings", href: "/admin/settings", icon: Settings, border: "hover:border-stone-400" },
   ];
@@ -154,7 +152,7 @@ export default function DashboardPage() {
   // 1. Line/Area Chart options (Application trends over the year)
   const areaChartOptions: ApexOptions = {
     legend: { show: false },
-    colors: ["#0B2D6B", "#E8C97A"],
+    colors: ["#5750f1", "#3c50e0"],
     chart: {
       type: "area",
       toolbar: { show: false },
@@ -246,7 +244,7 @@ export default function DashboardPage() {
       toolbar: { show: false },
       fontFamily: "inherit",
     },
-    colors: ["#0B2D6B"],
+    colors: ["#5750f1"],
     plotOptions: {
       bar: {
         borderRadius: 4,
@@ -288,11 +286,11 @@ export default function DashboardPage() {
               key={idx} 
               href={action.href} 
               className={cn(
-                "flex items-center px-4 py-2 border border-gray-200 bg-white text-xs font-bold text-dark rounded-full hover:shadow-sm dark:bg-gray-dark dark:border-gray-800 dark:text-white transition-all",
+                "flex items-center px-4 py-2 border border-gray-200 bg-white text-xs font-bold text-dark rounded-full hover:shadow-1 dark:bg-gray-dark dark:border-gray-800 dark:text-white transition-all",
                 action.border
               )}
             >
-              <action.icon className="h-4 w-4 text-[#0B2D6B] mr-2" />
+              <action.icon className="h-4 w-4 text-primary mr-2" />
               <span>{action.name}</span>
             </Link>
           ))}
@@ -304,7 +302,7 @@ export default function DashboardPage() {
         {statCards.map((card, idx) => (
           <div 
             key={idx} 
-            className="p-5 rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-dark flex items-center justify-between transition-transform duration-200 hover:-translate-y-0.5"
+            className="p-5 rounded-[10px] border border-gray-200 bg-white shadow-1 dark:border-gray-800 dark:bg-gray-dark flex items-center justify-between transition-transform duration-200 hover:-translate-y-0.5"
           >
             <div className="space-y-2">
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{card.title}</span>
@@ -324,7 +322,7 @@ export default function DashboardPage() {
       {/* Charts Layout Grid */}
       <div className="grid grid-cols-12 gap-4">
         {/* Area Trend Chart: 8 cols on XL */}
-        <div className="col-span-12 xl:col-span-8 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm">
+        <div className="col-span-12 xl:col-span-8 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-dark dark:text-white">Application Volume & Approvals</h3>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 dark:bg-dark-2 px-2.5 py-1 rounded-full">Annual Trend</span>
@@ -340,7 +338,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Donut Chart: 4 cols on XL */}
-        <div className="col-span-12 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div className="col-span-12 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 flex flex-col justify-between">
           <div className="mb-4">
             <h3 className="text-sm font-bold text-dark dark:text-white">Status Distribution</h3>
             <p className="text-[10px] text-gray-400 mt-0.5 font-medium">Contestant approval phase ratios.</p>
@@ -359,7 +357,7 @@ export default function DashboardPage() {
       {/* Second Charts & Lists Row */}
       <div className="grid grid-cols-12 gap-4">
         {/* Weekly activity: 4 cols */}
-        <div className="col-span-12 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm">
+        <div className="col-span-12 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1">
           <div className="mb-4">
             <h3 className="text-sm font-bold text-dark dark:text-white">Submission Frequency</h3>
             <p className="text-[10px] text-gray-400 mt-0.5 font-medium">Weekly submissions trend.</p>
@@ -375,7 +373,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Country Breakdown: 4 cols */}
-        <div className="col-span-12 md:col-span-6 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm flex flex-col">
+        <div className="col-span-12 md:col-span-6 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 flex flex-col">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800 mb-3">
             <h3 className="text-sm font-bold text-dark dark:text-white">Demographics</h3>
             <Globe className="h-4 w-4 text-gray-400" />
@@ -390,7 +388,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-3 flex-1 justify-end ml-4">
                     <div className="w-24 bg-gray-100 dark:bg-dark-2 h-2 rounded-full overflow-hidden">
                       <div 
-                        className="bg-[#0B2D6B] h-full rounded-full" 
+                        className="bg-primary h-full rounded-full" 
                         style={{ width: `${(item.count / metrics.totalApplications) * 100}%` }}
                       />
                     </div>
@@ -403,10 +401,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Security Logs Timeline: 4 cols */}
-        <div className="col-span-12 md:col-span-6 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm flex flex-col">
+        <div className="col-span-12 md:col-span-6 xl:col-span-4 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 flex flex-col">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800 mb-3">
             <h3 className="text-sm font-bold text-dark dark:text-white">Administrative Actions</h3>
-            <Link href="/admin/audit-logs" className="text-[10px] font-bold text-[#0B2D6B] flex items-center hover:underline">
+            <Link href="/admin/audit-logs" className="text-[10px] font-bold text-primary flex items-center hover:underline">
               View All <ArrowRight className="h-3 w-3 ml-1" />
             </Link>
           </div>
@@ -436,13 +434,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Applications Table */}
-      <div className="bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm">
+      <div className="bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1">
         <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-800 mb-4">
           <div>
             <h3 className="text-sm font-bold text-dark dark:text-white">Recent Application Submissions</h3>
             <p className="text-[10px] text-gray-400 font-medium mt-0.5">Validate and review contestant profiles.</p>
           </div>
-          <Link href="/admin/applications" className="text-[10px] font-bold text-[#0B2D6B] flex items-center hover:underline">
+          <Link href="/admin/applications" className="text-[10px] font-bold text-primary flex items-center hover:underline">
             View All Applications <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
         </div>
@@ -491,7 +489,7 @@ export default function DashboardPage() {
                     <td className="py-3.5 text-right">
                       <Link 
                         href={`/admin/applications/${app.id}`}
-                        className="inline-flex items-center justify-center p-2 rounded-lg bg-[#0B2D6B]/5 text-[#0B2D6B] hover:bg-[#0B2D6B] hover:text-white dark:bg-white/5 dark:text-white dark:hover:bg-[#E8C97A] dark:hover:text-[#071E4A] transition-colors"
+                        className="inline-flex items-center justify-center p-2 rounded-lg bg-primary/5 text-primary hover:bg-primary hover:text-white dark:bg-white/5 dark:text-white dark:hover:bg-primary dark:hover:text-white transition-colors"
                         title="Review profile applications wizard"
                       >
                         <ArrowRight className="h-4 w-4" />

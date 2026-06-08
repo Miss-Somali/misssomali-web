@@ -110,8 +110,8 @@ export default function PortalDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center py-24 min-h-[50vh]">
-        <Loader2 className="animate-spin h-10 w-10 text-[#0B2D6B] mb-4" />
-        <span className="text-sm font-semibold text-[#071E4A]/70 dark:text-dark-6">Loading contestant portal...</span>
+        <Loader2 className="animate-spin h-10 w-10 text-primary mb-4" />
+        <span className="text-sm font-semibold text-dark-5 dark:text-dark-6 dark:text-dark-6">Loading contestant portal...</span>
       </div>
     );
   }
@@ -119,12 +119,12 @@ export default function PortalDashboard() {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Welcome Banner */}
-      <div className="bg-[#0B2D6B] dark:bg-gray-dark border border-gray-200 dark:border-gray-800 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden shadow-sm flex flex-col justify-between">
+      <div className="bg-primary dark:bg-gray-dark border border-gray-200 dark:border-gray-800 rounded-[10px] p-6 md:p-8 text-white relative overflow-hidden shadow-1 flex flex-col justify-between">
         <div className="absolute right-0 bottom-0 top-0 opacity-10 w-1/3 pointer-events-none">
-          <div className="w-full h-full border-4 border-[#E8C97A] rounded-full translate-x-1/2 translate-y-1/3" />
+          <div className="w-full h-full border-4 border-primary rounded-full translate-x-1/2 translate-y-1/3" />
         </div>
         <div className="relative z-10 space-y-2 max-w-xl">
-          <h1 className="text-xl md:text-2xl font-black tracking-tight text-[#E8C97A]">
+          <h1 className="text-xl md:text-2xl font-black tracking-tight text-primary">
             Welcome back, {profile?.fullName}!
           </h1>
           <p className="text-xs md:text-sm text-white/80 leading-relaxed font-medium">
@@ -136,7 +136,7 @@ export default function PortalDashboard() {
       {/* Main Grid: Application Status & Timeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Application Status Card */}
-        <div className="lg:col-span-1 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-1 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-6 shadow-1 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-800">
               <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Application Status</span>
@@ -155,14 +155,14 @@ export default function PortalDashboard() {
             {!appData ? (
               <Link
                 href="/portal/application"
-                className="w-full flex items-center justify-center py-2.5 px-4 rounded-full text-xs font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors shadow-sm"
+                className="w-full flex items-center justify-center py-2.5 px-4 rounded-full text-xs font-bold text-white bg-primary hover:bg-dark transition-colors shadow-1"
               >
                 Start Application Wizard <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             ) : !appData.isSubmitted ? (
               <Link
                 href="/portal/application"
-                className="w-full flex items-center justify-center py-2.5 px-4 rounded-full text-xs font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors shadow-sm"
+                className="w-full flex items-center justify-center py-2.5 px-4 rounded-full text-xs font-bold text-white bg-primary hover:bg-dark transition-colors shadow-1"
               >
                 Continue Application Draft <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -178,7 +178,7 @@ export default function PortalDashboard() {
         </div>
 
         {/* Progress Timeline Card */}
-        <div className="lg:col-span-2 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-6 shadow-1 flex flex-col justify-between">
           <div className="space-y-2">
             <h3 className="text-sm font-bold text-dark dark:text-white">Your Selection Journey</h3>
             <p className="text-xs text-gray-400 font-medium">
@@ -200,9 +200,9 @@ export default function PortalDashboard() {
                       className={cn(
                         "h-10 w-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                         step.completed
-                          ? "bg-[#0B2D6B] border-[#0B2D6B] text-white"
+                          ? "bg-primary border-primary text-white"
                           : step.current
-                          ? "bg-amber-50 border-[#E8C97A] text-[#E8C97A] dark:bg-amber-950/20"
+                          ? "bg-amber-50 border-primary text-primary dark:bg-amber-950/20"
                           : "bg-white border-gray-200 text-gray-300 dark:bg-gray-dark dark:border-gray-800"
                       )}
                     >
@@ -211,7 +211,7 @@ export default function PortalDashboard() {
                     <span
                       className={cn(
                         "mt-2.5 text-[10px] font-bold uppercase tracking-wider",
-                        step.completed ? "text-dark dark:text-white" : step.current ? "text-[#E8C97A]" : "text-gray-400"
+                        step.completed ? "text-dark dark:text-white" : step.current ? "text-primary" : "text-gray-400"
                       )}
                     >
                       {step.name}
@@ -231,9 +231,9 @@ export default function PortalDashboard() {
                       className={cn(
                         "h-8 w-8 rounded-full flex items-center justify-center border-2",
                         step.completed
-                          ? "bg-[#0B2D6B] border-[#0B2D6B] text-white"
+                          ? "bg-primary border-primary text-white"
                           : step.current
-                          ? "bg-amber-50 border-[#E8C97A] text-[#E8C97A] dark:bg-amber-950/20"
+                          ? "bg-amber-50 border-primary text-primary dark:bg-amber-950/20"
                           : "bg-white border-gray-200 text-gray-300 dark:bg-gray-dark dark:border-gray-800"
                       )}
                     >
@@ -242,7 +242,7 @@ export default function PortalDashboard() {
                     <span
                       className={cn(
                         "text-xs font-bold uppercase tracking-wider",
-                        step.completed ? "text-dark dark:text-white" : step.current ? "text-[#E8C97A]" : "text-gray-400"
+                        step.completed ? "text-dark dark:text-white" : step.current ? "text-primary" : "text-gray-400"
                       )}
                     >
                       {step.name}
@@ -261,9 +261,9 @@ export default function PortalDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/portal/application"
-            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 hover:shadow-2 transition-all duration-200"
           >
-            <div className="h-10 w-10 rounded-xl bg-[#0B2D6B]/5 text-[#0B2D6B] flex items-center justify-center group-hover:bg-[#0B2D6B] group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-[#E8C97A] dark:group-hover:text-[#071E4A]">
+            <div className="h-10 w-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-primary dark:group-hover:text-white">
               <FileText className="h-5 w-5" />
             </div>
             <h4 className="text-xs font-bold text-dark dark:text-white mb-1">Application Wizard</h4>
@@ -272,9 +272,9 @@ export default function PortalDashboard() {
 
           <Link
             href="/portal/media"
-            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 hover:shadow-2 transition-all duration-200"
           >
-            <div className="h-10 w-10 rounded-xl bg-[#0B2D6B]/5 text-[#0B2D6B] flex items-center justify-center group-hover:bg-[#0B2D6B] group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-[#E8C97A] dark:group-hover:text-[#071E4A]">
+            <div className="h-10 w-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-primary dark:group-hover:text-white">
               <ImageIcon className="h-5 w-5" />
             </div>
             <h4 className="text-xs font-bold text-dark dark:text-white mb-1">Media Portfolio</h4>
@@ -283,9 +283,9 @@ export default function PortalDashboard() {
 
           <Link
             href="/portal/notifications"
-            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 hover:shadow-2 transition-all duration-200"
           >
-            <div className="h-10 w-10 rounded-xl bg-[#0B2D6B]/5 text-[#0B2D6B] flex items-center justify-center group-hover:bg-[#0B2D6B] group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-[#E8C97A] dark:group-hover:text-[#071E4A]">
+            <div className="h-10 w-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-primary dark:group-hover:text-white">
               <Bell className="h-5 w-5" />
             </div>
             <h4 className="text-xs font-bold text-dark dark:text-white mb-1">Inbox Alerts</h4>
@@ -294,9 +294,9 @@ export default function PortalDashboard() {
 
           <Link
             href="/portal/events"
-            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
+            className="group block bg-white hover:bg-gray-50/50 border border-gray-200 dark:border-gray-800 dark:bg-gray-dark rounded-[10px] p-5 shadow-1 hover:shadow-2 transition-all duration-200"
           >
-            <div className="h-10 w-10 rounded-xl bg-[#0B2D6B]/5 text-[#0B2D6B] flex items-center justify-center group-hover:bg-[#0B2D6B] group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-[#E8C97A] dark:group-hover:text-[#071E4A]">
+            <div className="h-10 w-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-200 mb-4 dark:bg-white/5 dark:text-white dark:group-hover:bg-primary dark:group-hover:text-white">
               <Calendar className="h-5 w-5" />
             </div>
             <h4 className="text-xs font-bold text-dark dark:text-white mb-1">Pageant Calendar</h4>

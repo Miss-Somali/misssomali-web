@@ -143,14 +143,14 @@ export default function EventsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#071E4A]">Events Calendar</h1>
-          <p className="text-sm text-[#071E4A]/60 mt-1">
+          <h1 className="text-2xl font-extrabold text-dark dark:text-white">Events Calendar</h1>
+          <p className="text-sm text-dark-5 dark:text-dark-6 mt-1">
             Configure preliminary sessions, grand finales, fashion shows, and countdown milestones.
           </p>
         </div>
         <button
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center px-4 py-2.5 bg-[#0B2D6B] hover:bg-[#071E4A] text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+          className="inline-flex items-center px-4 py-2.5 bg-primary hover:bg-dark text-white rounded-xl text-xs font-bold transition-all shadow-1"
         >
           <Plus className="h-4.5 w-4.5 mr-1" /> Create New Event
         </button>
@@ -158,20 +158,20 @@ export default function EventsPage() {
 
       {/* Events Grid */}
       {loading ? (
-        <div className="py-20 flex flex-col justify-center items-center bg-white border border-[#E8E8E8] rounded-2xl shadow-sm">
-          <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B] mb-2" />
-          <p className="text-xs font-semibold text-[#071E4A]/60">Loading events...</p>
+        <div className="py-20 flex flex-col justify-center items-center bg-white border border-stroke dark:border-dark-3 rounded-[10px] shadow-1">
+          <Loader2 className="animate-spin h-8 w-8 text-primary mb-2" />
+          <p className="text-xs font-semibold text-dark-5 dark:text-dark-6">Loading events...</p>
         </div>
       ) : events.length === 0 ? (
-        <div className="py-20 text-center bg-white border border-[#E8E8E8] rounded-2xl shadow-sm">
-          <p className="text-sm font-semibold text-[#071E4A]/60">No events created yet.</p>
+        <div className="py-20 text-center bg-white border border-stroke dark:border-dark-3 rounded-[10px] shadow-1">
+          <p className="text-sm font-semibold text-dark-5 dark:text-dark-6">No events created yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {events.map((event) => {
             const isUpcoming = new Date(event.eventDate).getTime() > now;
             return (
-              <div key={event.id} className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-all duration-200">
+              <div key={event.id} className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] overflow-hidden shadow-1 flex flex-col hover:shadow-2 transition-all duration-200">
                 
                 {/* Cover Image & Indicators */}
                 <div className="relative aspect-[21/9] bg-gray-50">
@@ -181,14 +181,14 @@ export default function EventsPage() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-3 left-3 flex gap-2">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-sm ${
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-1 ${
                       event.isPublished 
                         ? "bg-emerald-50 text-emerald-800 border border-emerald-200" 
                         : "bg-amber-50 text-amber-800 border border-amber-200"
                     }`}>
                       {event.isPublished ? "Public" : "Draft"}
                     </span>
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-sm ${
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8px] font-extrabold uppercase shadow-1 ${
                       isUpcoming 
                         ? "bg-blue-50 text-blue-800 border border-blue-200" 
                         : "bg-gray-100 text-gray-800 border border-gray-200"
@@ -201,19 +201,19 @@ export default function EventsPage() {
                 {/* Content */}
                 <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
-                    <h3 className="text-base font-extrabold text-[#071E4A]">{event.title}</h3>
-                    <p className="text-xs text-[#071E4A]/70 font-semibold line-clamp-2 leading-relaxed">
+                    <h3 className="text-base font-extrabold text-dark dark:text-white">{event.title}</h3>
+                    <p className="text-xs text-dark-5 dark:text-dark-6 font-semibold line-clamp-2 leading-relaxed">
                       {event.description}
                     </p>
-                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-bold text-[#071E4A]/60">
-                      <div className="flex items-center"><Calendar className="h-4 w-4 mr-1.5 text-[#0B2D6B]" /> {new Date(event.eventDate).toLocaleDateString()}</div>
-                      <div className="flex items-center"><Clock className="h-4 w-4 mr-1.5 text-[#0B2D6B]" /> {new Date(event.eventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                      <div className="flex items-center col-span-2"><MapPin className="h-4 w-4 mr-1.5 text-[#0B2D6B]" /> {event.location}</div>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] font-bold text-dark-5 dark:text-dark-6">
+                      <div className="flex items-center"><Calendar className="h-4 w-4 mr-1.5 text-primary" /> {new Date(event.eventDate).toLocaleDateString()}</div>
+                      <div className="flex items-center"><Clock className="h-4 w-4 mr-1.5 text-primary" /> {new Date(event.eventDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                      <div className="flex items-center col-span-2"><MapPin className="h-4 w-4 mr-1.5 text-primary" /> {event.location}</div>
                     </div>
                   </div>
 
                   {/* Actions Bar */}
-                  <div className="pt-4 border-t border-[#E8E8E8] flex items-center justify-between">
+                  <div className="pt-4 border-t border-stroke dark:border-dark-3 flex items-center justify-between">
                     <button
                       onClick={() => handleTogglePublish(event.id, event.isPublished)}
                       className={`inline-flex items-center text-xs font-bold ${
@@ -250,8 +250,8 @@ export default function EventsPage() {
       {/* Creation Overlay Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl border border-[#E8E8E8] max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-base font-bold text-[#071E4A]">Create Preliminary or Final Event</h3>
+          <div className="bg-white rounded-[10px] border border-stroke dark:border-dark-3 max-w-lg w-full p-6 shadow-3 space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-base font-bold text-dark dark:text-white">Create Preliminary or Final Event</h3>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -264,7 +264,7 @@ export default function EventsPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g., Grand Finale Coronation Night"
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
@@ -278,7 +278,7 @@ export default function EventsPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Provide schedule details, ticket information, performance highlights..."
                   rows={3}
-                  className="w-full border border-[#E8E8E8] rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
@@ -293,7 +293,7 @@ export default function EventsPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g., Royal Palace Hall, Mogadishu"
-                    className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                    className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
                 <div>
@@ -305,7 +305,7 @@ export default function EventsPage() {
                     required
                     value={eventDate}
                     onChange={(e) => setEventDate(e.target.value)}
-                    className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                    className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
@@ -318,7 +318,7 @@ export default function EventsPage() {
                   <button
                     type="button"
                     onClick={handleGenerateCoverImage}
-                    className="text-[10px] text-[#0B2D6B] font-bold hover:underline"
+                    className="text-[10px] text-primary font-bold hover:underline"
                   >
                     Generate Mock Image
                   </button>
@@ -329,7 +329,7 @@ export default function EventsPage() {
                   value={coverImage}
                   onChange={(e) => setCoverImage(e.target.value)}
                   placeholder="https://r2.misssomali.com/events/..."
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
@@ -339,9 +339,9 @@ export default function EventsPage() {
                   id="eventIsPublished"
                   checked={isPublished}
                   onChange={(e) => setIsPublished(e.target.checked)}
-                  className="rounded border-[#E8E8E8] text-[#0B2D6B] focus:ring-[#0B2D6B]"
+                  className="rounded border-stroke dark:border-dark-3 text-primary focus:ring-primary"
                 />
-                <label htmlFor="eventIsPublished" className="text-xs font-bold text-[#071E4A] cursor-pointer">
+                <label htmlFor="eventIsPublished" className="text-xs font-bold text-dark dark:text-white cursor-pointer">
                   Publish immediately (Publicly visible in timeline)
                 </label>
               </div>
@@ -350,14 +350,14 @@ export default function EventsPage() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 border border-[#E8E8E8] rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-stroke dark:border-dark-3 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors"
                   disabled={submitting}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#0B2D6B] hover:bg-[#071E4A] text-white rounded-xl text-xs font-bold transition-colors shadow-sm"
+                  className="px-4 py-2 bg-primary hover:bg-dark text-white rounded-xl text-xs font-bold transition-colors shadow-1"
                   disabled={submitting}
                 >
                   {submitting ? <Loader2 className="animate-spin h-4 w-4" /> : "Publish Event"}

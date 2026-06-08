@@ -82,7 +82,7 @@ export function Notification() {
           <span className="text-sm font-bold text-dark dark:text-white">
             Notifications
           </span>
-          <span className="rounded-md bg-[#0B2D6B] px-2.25 py-0.5 text-[10px] font-bold text-white">
+          <span className="rounded-md bg-primary px-2.25 py-0.5 text-[10px] font-bold text-white">
             4 new
           </span>
         </div>
@@ -119,7 +119,7 @@ export function Notification() {
         <Link
           href="#"
           onClick={() => setIsOpen(false)}
-          className="block rounded-lg border border-[#0B2D6B] p-2 text-center text-xs font-semibold text-[#0B2D6B] hover:bg-gray-50 transition-colors dark:border-dark-3 dark:text-dark-6 dark:hover:bg-dark-3"
+          className="block rounded-lg border border-primary p-2 text-center text-xs font-semibold text-primary hover:bg-gray-50 transition-colors dark:border-dark-3 dark:text-dark-6 dark:hover:bg-dark-3"
         >
           See all notifications
         </Link>

@@ -89,7 +89,7 @@ export default function NotificationsInbox() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
@@ -123,15 +123,15 @@ export default function NotificationsInbox() {
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fadeIn">
       {/* Title Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#E8E8E8] pb-5 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stroke dark:border-dark-3 pb-5 gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#071E4A]">Notification Inbox</h1>
-          <p className="text-sm text-[#071E4A]/60">Read communications from Miss Somali admins and event coordinators.</p>
+          <h1 className="text-2xl font-extrabold text-dark dark:text-white">Notification Inbox</h1>
+          <p className="text-sm text-dark-5 dark:text-dark-6">Read communications from Miss Somali admins and event coordinators.</p>
         </div>
         {unreadCount > 0 && (
           <button
             onClick={handleMarkAllAsRead}
-            className="flex items-center px-4 py-2 text-xs font-bold border border-[#0B2D6B]/20 rounded-full text-[#0B2D6B] bg-white hover:bg-gray-50 transition-colors self-start"
+            className="flex items-center px-4 py-2 text-xs font-bold border border-primary/20 rounded-full text-primary bg-white hover:bg-gray-50 transition-colors self-start"
           >
             <CheckCheck className="h-4 w-4 mr-2" /> Mark All as Read
           </button>
@@ -139,7 +139,7 @@ export default function NotificationsInbox() {
       </div>
 
       {/* Inbox Panel */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden shadow-sm divide-y divide-[#E8E8E8]">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] overflow-hidden shadow-1 divide-y divide-stroke dark:divide-dark-3">
         
         {notifications.length > 0 ? (
           notifications.map((notification) => (
@@ -157,14 +157,14 @@ export default function NotificationsInbox() {
               {/* Message Content */}
               <div className="flex-1 min-w-0 space-y-1">
                 <div className="flex items-center justify-between gap-4">
-                  <h3 className={`text-sm font-bold truncate ${notification.isRead ? "text-[#071E4A]/80" : "text-[#071E4A]"}`}>
+                  <h3 className={`text-sm font-bold truncate ${notification.isRead ? "text-dark-5 dark:text-dark-6" : "text-dark dark:text-white"}`}>
                     {notification.title}
                   </h3>
                   <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap">
                     {new Date(notification.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className={`text-xs sm:text-sm leading-relaxed ${notification.isRead ? "text-[#071E4A]/55" : "text-[#071E4A]/80"}`}>
+                <p className={`text-xs sm:text-sm leading-relaxed ${notification.isRead ? "text-dark-5 dark:text-dark-6" : "text-dark-5 dark:text-dark-6"}`}>
                   {notification.message}
                 </p>
               </div>
@@ -175,7 +175,7 @@ export default function NotificationsInbox() {
                   <button
                     disabled={updatingId === notification.id}
                     onClick={() => handleMarkAsRead(notification.id)}
-                    className="p-1.5 rounded-full border border-gray-200 text-gray-400 hover:text-[#0B2D6B] hover:border-[#0B2D6B] hover:bg-gray-50 transition-all"
+                    className="p-1.5 rounded-full border border-gray-200 text-gray-400 hover:text-primary hover:border-primary hover:bg-gray-50 transition-all"
                     title="Mark as Read"
                   >
                     {updatingId === notification.id ? (
@@ -191,8 +191,8 @@ export default function NotificationsInbox() {
         ) : (
           <div className="p-16 text-center text-gray-400">
             <Inbox className="h-10 w-10 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm font-bold text-[#071E4A]/70">No Notifications Received</p>
-            <p className="text-xs text-[#071E4A]/40 mt-1">Your notification center inbox is currently empty.</p>
+            <p className="text-sm font-bold text-dark-5 dark:text-dark-6">No Notifications Received</p>
+            <p className="text-xs text-dark-6 mt-1">Your notification center inbox is currently empty.</p>
           </div>
         )}
 

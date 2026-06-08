@@ -78,7 +78,7 @@ export default function EventsCalendar() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
@@ -86,46 +86,46 @@ export default function EventsCalendar() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
       {/* Title Header */}
-      <div className="border-b border-[#E8E8E8] pb-5">
-        <h1 className="text-2xl font-extrabold text-[#071E4A]">Pageant Events</h1>
-        <p className="text-sm text-[#071E4A]/60">Track scheduled Miss Somali orientation rounds, interviews, and official stage finals.</p>
+      <div className="border-b border-stroke dark:border-dark-3 pb-5">
+        <h1 className="text-2xl font-extrabold text-dark dark:text-white">Pageant Events</h1>
+        <p className="text-sm text-dark-5 dark:text-dark-6">Track scheduled Miss Somali orientation rounds, interviews, and official stage finals.</p>
       </div>
 
       {/* Countdown Card (Next Event) */}
       {nextEvent && (
-        <div className="bg-[#0B2D6B] text-white rounded-2xl p-6 sm:p-8 shadow-lg grid grid-cols-1 lg:grid-cols-5 gap-6 sm:gap-8 items-center border border-[#0B2D6B]/15">
+        <div className="bg-primary text-white rounded-[10px] p-6 sm:p-8 shadow-3 grid grid-cols-1 lg:grid-cols-5 gap-6 sm:gap-8 items-center border border-primary/15">
           <div className="lg:col-span-3 space-y-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-[#E8C97A] text-[#071E4A] uppercase tracking-wide">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-primary text-white uppercase tracking-wide">
               Next Live Event
             </span>
             <h2 className="text-2xl font-extrabold tracking-tight">{nextEvent.title}</h2>
             <p className="text-sm text-white/80 leading-relaxed max-w-md">{nextEvent.description}</p>
             
             <div className="flex flex-wrap gap-4 text-xs font-semibold pt-2 text-white/70">
-              <span className="flex items-center"><Calendar className="h-4 w-4 mr-1.5 text-[#E8C97A]" /> {new Date(nextEvent.eventDate).toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              <span className="flex items-center"><MapPin className="h-4 w-4 mr-1.5 text-[#E8C97A]" /> {nextEvent.location}</span>
+              <span className="flex items-center"><Calendar className="h-4 w-4 mr-1.5 text-primary" /> {new Date(nextEvent.eventDate).toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span className="flex items-center"><MapPin className="h-4 w-4 mr-1.5 text-primary" /> {nextEvent.location}</span>
             </div>
           </div>
 
           {/* Countdown Clock Display */}
-          <div className="lg:col-span-2 bg-[#071E4A]/40 border border-white/5 rounded-xl p-4 sm:p-6 text-center">
+          <div className="lg:col-span-2 bg-dark-2/40 border border-white/5 rounded-xl p-4 sm:p-6 text-center">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/50 block mb-3">Countdown to Event</span>
             <div className="flex justify-center space-x-3 text-white">
               <div className="flex flex-col items-center">
                 <span className="text-2xl sm:text-3xl font-extrabold">{String(countdown.days).padStart(2, "0")}</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-white/60 mt-1">Days</span>
               </div>
-              <span className="text-2xl font-extrabold text-[#E8C97A] self-start mt-0.5">:</span>
+              <span className="text-2xl font-extrabold text-primary self-start mt-0.5">:</span>
               <div className="flex flex-col items-center">
                 <span className="text-2xl sm:text-3xl font-extrabold">{String(countdown.hours).padStart(2, "0")}</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-white/60 mt-1">Hrs</span>
               </div>
-              <span className="text-2xl font-extrabold text-[#E8C97A] self-start mt-0.5">:</span>
+              <span className="text-2xl font-extrabold text-primary self-start mt-0.5">:</span>
               <div className="flex flex-col items-center">
                 <span className="text-2xl sm:text-3xl font-extrabold">{String(countdown.minutes).padStart(2, "0")}</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-white/60 mt-1">Min</span>
               </div>
-              <span className="text-2xl font-extrabold text-[#E8C97A] self-start mt-0.5">:</span>
+              <span className="text-2xl font-extrabold text-primary self-start mt-0.5">:</span>
               <div className="flex flex-col items-center">
                 <span className="text-2xl sm:text-3xl font-extrabold">{String(countdown.seconds).padStart(2, "0")}</span>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-white/60 mt-1">Sec</span>
@@ -137,15 +137,15 @@ export default function EventsCalendar() {
 
       {/* Events List Grid */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold text-[#071E4A]">Complete Event Schedule</h3>
+        <h3 className="text-lg font-bold text-dark dark:text-white">Complete Event Schedule</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {events.map((e) => {
             const isPast = new Date(e.eventDate).getTime() < new Date().getTime();
             return (
               <div
                 key={e.id}
-                className={`bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col justify-between transition-opacity ${
-                  isPast ? "opacity-55 border-gray-200" : "border-[#E8E8E8]"
+                className={`bg-white border rounded-xl overflow-hidden shadow-1 flex flex-col justify-between transition-opacity ${
+                  isPast ? "opacity-55 border-gray-200" : "border-stroke dark:border-dark-3"
                 }`}
               >
                 {/* Event Cover Photo */}
@@ -161,13 +161,13 @@ export default function EventsCalendar() {
                 {/* Event Text Detail */}
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
-                    <h4 className="text-base font-bold text-[#071E4A] leading-tight">{e.title}</h4>
-                    <p className="text-xs text-[#071E4A]/70 leading-relaxed">{e.description}</p>
+                    <h4 className="text-base font-bold text-dark dark:text-white leading-tight">{e.title}</h4>
+                    <p className="text-xs text-dark-5 dark:text-dark-6 leading-relaxed">{e.description}</p>
                   </div>
 
-                  <div className="space-y-1.5 pt-2 border-t border-[#E8E8E8] text-xs font-semibold text-[#071E4A]/60">
-                    <div className="flex items-center"><Clock className="h-3.5 w-3.5 mr-2 text-[#0B2D6B]" /> {new Date(e.eventDate).toLocaleDateString()}</div>
-                    <div className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-2 text-[#0B2D6B]" /> {e.location}</div>
+                  <div className="space-y-1.5 pt-2 border-t border-stroke dark:border-dark-3 text-xs font-semibold text-dark-5 dark:text-dark-6">
+                    <div className="flex items-center"><Clock className="h-3.5 w-3.5 mr-2 text-primary" /> {new Date(e.eventDate).toLocaleDateString()}</div>
+                    <div className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-2 text-primary" /> {e.location}</div>
                   </div>
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function EventsCalendar() {
           })}
 
           {events.length === 0 && (
-            <div className="col-span-full border-2 border-dashed border-[#E8E8E8] rounded-2xl p-12 text-center text-gray-400">
+            <div className="col-span-full border-2 border-dashed border-stroke dark:border-dark-3 rounded-[10px] p-12 text-center text-gray-400">
               <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <span className="text-xs font-medium">No pageant events have been scheduled yet.</span>
             </div>

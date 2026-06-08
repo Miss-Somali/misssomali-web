@@ -150,7 +150,7 @@ export default function MediaHub() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
@@ -162,10 +162,10 @@ export default function MediaHub() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
       {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#E8E8E8] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stroke dark:border-dark-3 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#071E4A]">Media Upload Hub</h1>
-          <p className="text-sm text-[#071E4A]/60">Manage your pageant pictures. Upload portraits, full body poses, and event snaps.</p>
+          <h1 className="text-2xl font-extrabold text-dark dark:text-white">Media Upload Hub</h1>
+          <p className="text-sm text-dark-5 dark:text-dark-6">Manage your pageant pictures. Upload portraits, full body poses, and event snaps.</p>
         </div>
         {isSubmitted && (
           <span className="mt-4 sm:mt-0 flex items-center px-4 py-2 text-xs font-bold border border-red-200 rounded-full text-red-600 bg-red-50">
@@ -196,14 +196,14 @@ export default function MediaHub() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* Profile Picture Card */}
-        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm flex flex-col justify-between items-center text-center">
+        <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 shadow-1 flex flex-col justify-between items-center text-center">
           <div className="space-y-2 w-full">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#071E4A]/60">Contestant Profile Picture</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-dark-5 dark:text-dark-6">Contestant Profile Picture</span>
               <span className="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-50 text-blue-700">Official</span>
             </div>
 
-            <div className="h-48 w-48 rounded-full border-4 border-[#0B2D6B]/15 overflow-hidden mx-auto flex items-center justify-center bg-gray-50 relative group">
+            <div className="h-48 w-48 rounded-full border-4 border-primary/15 overflow-hidden mx-auto flex items-center justify-center bg-gray-50 relative group">
               {profilePic ? (
                 <>
                   <img src={profilePic.url} className="h-full w-full object-cover" alt="Profile" />
@@ -222,7 +222,7 @@ export default function MediaHub() {
                 <User className="h-16 w-16 text-gray-300" />
               )}
             </div>
-            <p className="text-xs text-[#071E4A]/50 max-w-[200px] mx-auto mt-2">
+            <p className="text-xs text-dark-6 max-w-[200px] mx-auto mt-2">
               Used as your primary contestant card face thumbnail.
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function MediaHub() {
             <button
               onClick={() => handleMockUpload("profile")}
               disabled={uploading}
-              className="mt-6 flex items-center py-2.5 px-6 rounded-full text-xs font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors disabled:opacity-50"
+              className="mt-6 flex items-center py-2.5 px-6 rounded-full text-xs font-bold text-white bg-primary hover:bg-dark transition-colors disabled:opacity-50"
             >
               {uploading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
               Upload Profile Photo
@@ -240,14 +240,14 @@ export default function MediaHub() {
         </div>
 
         {/* Full Body Picture Card */}
-        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm flex flex-col justify-between items-center text-center">
+        <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 shadow-1 flex flex-col justify-between items-center text-center">
           <div className="space-y-2 w-full">
             <div className="flex justify-between items-center mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#071E4A]/60">Full-Body Portrait</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-dark-5 dark:text-dark-6">Full-Body Portrait</span>
               <span className="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-50 text-blue-700">Official</span>
             </div>
 
-            <div className="h-48 w-36 rounded-xl border border-[#E8E8E8] overflow-hidden mx-auto flex items-center justify-center bg-gray-50 relative group">
+            <div className="h-48 w-36 rounded-xl border border-stroke dark:border-dark-3 overflow-hidden mx-auto flex items-center justify-center bg-gray-50 relative group">
               {fullBodyPic ? (
                 <>
                   <img src={fullBodyPic.url} className="h-full w-full object-cover" alt="Full Body" />
@@ -266,7 +266,7 @@ export default function MediaHub() {
                 <ImageIcon className="h-16 w-16 text-gray-300" />
               )}
             </div>
-            <p className="text-xs text-[#071E4A]/50 max-w-[200px] mx-auto mt-2">
+            <p className="text-xs text-dark-6 max-w-[200px] mx-auto mt-2">
               Used to demonstrate posture and presence parameters.
             </p>
           </div>
@@ -275,7 +275,7 @@ export default function MediaHub() {
             <button
               onClick={() => handleMockUpload("full_body")}
               disabled={uploading}
-              className="mt-6 flex items-center py-2.5 px-6 rounded-full text-xs font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors disabled:opacity-50"
+              className="mt-6 flex items-center py-2.5 px-6 rounded-full text-xs font-bold text-white bg-primary hover:bg-dark transition-colors disabled:opacity-50"
             >
               {uploading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
               Upload Full Body Photo
@@ -286,17 +286,17 @@ export default function MediaHub() {
       </div>
 
       {/* Gallery Section */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#E8E8E8] pb-4">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 sm:p-8 shadow-1 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stroke dark:border-dark-3 pb-4">
           <div>
-            <h3 className="text-lg font-bold text-[#071E4A]">Personal Gallery Photos</h3>
-            <p className="text-xs text-[#071E4A]/60 mt-0.5">Share additional lifestyle, advocacy, or backstage photos.</p>
+            <h3 className="text-lg font-bold text-dark dark:text-white">Personal Gallery Photos</h3>
+            <p className="text-xs text-dark-5 dark:text-dark-6 mt-0.5">Share additional lifestyle, advocacy, or backstage photos.</p>
           </div>
           {!isSubmitted && (
             <button
               onClick={() => handleMockUpload("gallery")}
               disabled={uploading}
-              className="flex items-center py-2 px-4 rounded-full text-xs font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#F0D898] transition-colors disabled:opacity-50"
+              className="flex items-center py-2 px-4 rounded-full text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {uploading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
               Append Gallery Photo
@@ -307,13 +307,13 @@ export default function MediaHub() {
         {/* Gallery Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {galleryPics.map((photo) => (
-            <div key={photo.id} className="relative group border border-[#E8E8E8] rounded-xl overflow-hidden h-40 bg-gray-50">
+            <div key={photo.id} className="relative group border border-stroke dark:border-dark-3 rounded-xl overflow-hidden h-40 bg-gray-50">
               <img src={photo.url} className="h-full w-full object-cover" alt="Gallery item" />
               {!isSubmitted && (
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 px-2">
                   <button
                     onClick={() => handleSetProfilePic(photo.id)}
-                    className="w-full text-[10px] font-bold py-1.5 px-2 bg-white text-[#071E4A] rounded hover:bg-gray-100 transition-colors"
+                    className="w-full text-[10px] font-bold py-1.5 px-2 bg-white text-dark dark:text-white rounded hover:bg-gray-100 transition-colors"
                   >
                     Set Profile Picture
                   </button>
@@ -329,7 +329,7 @@ export default function MediaHub() {
           ))}
 
           {galleryPics.length === 0 && (
-            <div className="col-span-full border-2 border-dashed border-[#E8E8E8] rounded-xl p-8 text-center text-gray-400">
+            <div className="col-span-full border-2 border-dashed border-stroke dark:border-dark-3 rounded-xl p-8 text-center text-gray-400">
               <ImageIcon className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <span className="text-xs font-medium">No additional gallery pictures uploaded.</span>
             </div>

@@ -2,6 +2,38 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+
 :root {
   --background: #0B2D6B;
   --foreground: #F5F0E8;
@@ -16,9 +48,15 @@
   --color-brand-offwhite: #F5F0E8;
   --color-brand-white: #FFFFFF;
   --color-brand-light-gray: #E8E8E8;
-  --font-sans: var(--font-plus-jakarta-sans);
+  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --color-primary: #0B2D6B;
+  --breakpoint-2xsm: 375px;
+  --breakpoint-xsm: 425px;
+  --breakpoint-3xl: 2000px;
+
+  --color-current: currentColor;
+  --color-transparent: transparent;
+  --color-primary: #5750f1;
   --color-stroke: #e6ebf1;
   --color-stroke-dark: #27303e;
 
@@ -49,12 +87,65 @@
 
   --color-blue: #3c50e0;
   --color-blue-dark: #1c3fb7;
+
+  --color-green-light-1: #10b981;
+  --color-green-light-2: #57de8f;
+  --color-green-light-3: #82e6ac;
+  --color-green-light-4: #acefc8;
+  --color-green-light-5: #c2f3d6;
+  --color-green-light-6: #daf8e6;
+  --color-green-light-7: #e9fbf0;
+  --color-green-light: #2cd673;
+  --color-red-light-2: #f89090;
+  --color-red-light-3: #fbc0c0;
+  --color-red-light-4: #fdd8d8;
+  --color-red-light-5: #feebeb;
+  --color-red-light-6: #fef3f3;
+  --color-red-light: #f56060;
+  --color-blue-light-2: #8099ec;
+  --color-blue-light-3: #adbcf2;
+  --color-blue-light-4: #c3cef6;
+  --color-blue-light-5: #e1e8ff;
+  --color-blue-light: #5475e5;
+  --color-orange-light: #f59460;
+  --color-yellow-dark-2: #d97706;
+  --color-yellow-dark: #f59e0b;
+  --color-yellow-light-4: #fffbeb;
+  --color-yellow-light: #fcd34d;
+
+  --text-heading-1: 60px;
+  --text-heading-1--line-height: 72px;
+  --text-heading-2: 48px;
+  --text-heading-2--line-height: 58px;
+  --text-heading-3: 40px;
+  --text-heading-3--line-height: 48px;
+  --text-heading-4: 35px;
+  --text-heading-4--line-height: 45px;
+  --text-heading-5: 28px;
+  --text-heading-5--line-height: 40px;
+  --text-heading-6: 24px;
+  --text-heading-6--line-height: 30px;
+  --text-body-2xlg: 22px;
+  --text-body-2xlg--line-height: 28px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 22px;
+  --text-body-xs: 12px;
+  --text-body-xs--line-height: 20px;
+
+  --shadow-1: 0px 1px 2px 0px rgba(84, 87, 118, 0.12);
+  --shadow-2: 0px 2px 3px 0px rgba(84, 87, 118, 0.15);
+  --shadow-3: 0px 8px 8.466px 0px rgba(113, 116, 152, 0.05), 0px 8px 16.224px 0px rgba(113, 116, 152, 0.07), 0px 18px 31px 0px rgba(113, 116, 152, 0.1);
+  --shadow-card: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+  --shadow-card-2: 0px 8px 13px -3px rgba(0, 0, 0, 0.07);
+  --shadow-switch-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+  --shadow-switch-2: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  --shadow-datepicker: -5px 0 0 #1f2a37, 5px 0 0 #1f2a37;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Satoshi", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   overflow-x: hidden;
 }
 
@@ -362,6 +453,5 @@ body {
 .apexcharts-datalabels-group .apexcharts-datalabel-value {
   @apply fill-dark! dark:fill-white!;
 }
-
 
 

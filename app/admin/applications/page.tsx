@@ -97,14 +97,14 @@ export default function ApplicationsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-[#071E4A]">Applicant Profiles</h1>
-        <p className="text-sm text-[#071E4A]/60 mt-1">
+        <h1 className="text-2xl font-extrabold text-dark dark:text-white">Applicant Profiles</h1>
+        <p className="text-sm text-dark-5 dark:text-dark-6 mt-1">
           Review, filter, and manage applicant dossiers and application statuses.
         </p>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-5 shadow-1 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between md:space-x-4">
         
         {/* Search */}
         <div className="relative flex-1">
@@ -116,7 +116,7 @@ export default function ApplicationsPage() {
             placeholder="Search by full name..."
             value={search}
             onChange={handleSearchChange}
-            className="block w-full pl-10 pr-4 py-2.5 border border-[#E8E8E8] rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] focus:border-transparent text-[#071E4A]"
+            className="block w-full pl-10 pr-4 py-2.5 border border-stroke dark:border-dark-3 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-dark dark:text-white"
           />
         </div>
 
@@ -129,7 +129,7 @@ export default function ApplicationsPage() {
             <select
               value={status}
               onChange={handleStatusChange}
-              className="bg-white border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+              className="bg-white border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -143,7 +143,7 @@ export default function ApplicationsPage() {
           <select
             value={country}
             onChange={handleCountryChange}
-            className="bg-white border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+            className="bg-white border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
           >
             <option value="all">All Countries</option>
             {countries.map((c) => (
@@ -155,21 +155,21 @@ export default function ApplicationsPage() {
       </div>
 
       {/* Applications Table */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] shadow-1 overflow-hidden">
         {loading ? (
           <div className="py-20 flex flex-col justify-center items-center">
-            <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B] mb-2" />
-            <p className="text-xs font-semibold text-[#071E4A]/60">Loading applications...</p>
+            <Loader2 className="animate-spin h-8 w-8 text-primary mb-2" />
+            <p className="text-xs font-semibold text-dark-5 dark:text-dark-6">Loading applications...</p>
           </div>
         ) : applications.length === 0 ? (
           <div className="py-20 text-center">
-            <p className="text-sm font-semibold text-[#071E4A]/60">No applicant profiles match your criteria.</p>
+            <p className="text-sm font-semibold text-dark-5 dark:text-dark-6">No applicant profiles match your criteria.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50/75 border-b border-[#E8E8E8] text-[#071E4A] font-extrabold text-xs uppercase tracking-wider">
+                <tr className="bg-gray-50/75 border-b border-stroke dark:border-dark-3 text-dark dark:text-white font-extrabold text-xs uppercase tracking-wider">
                   <th className="py-4 px-6">Applicant Name</th>
                   <th className="py-4 px-6">Country / City</th>
                   <th className="py-4 px-6">Applied Date</th>
@@ -177,12 +177,12 @@ export default function ApplicationsPage() {
                   <th className="py-4 px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E8E8E8] text-[#071E4A] text-xs">
+              <tbody className="divide-y divide-stroke dark:divide-dark-3 text-dark dark:text-white text-xs">
                 {applications.map((app) => (
                   <tr key={app.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-4 px-6 font-bold">{app.user.fullName}</td>
                     <td className="py-4 px-6 font-semibold">
-                      {app.country} <span className="text-[#071E4A]/40 font-normal">({app.city})</span>
+                      {app.country} <span className="text-dark-6 font-normal">({app.city})</span>
                     </td>
                     <td className="py-4 px-6 text-gray-500 font-medium">
                       {new Date(app.appliedAt).toLocaleDateString(undefined, {
@@ -207,7 +207,7 @@ export default function ApplicationsPage() {
                     <td className="py-4 px-6 text-right">
                       <Link
                         href={`/admin/applications/${app.id}`}
-                        className="inline-flex items-center px-3 py-1.5 rounded-lg border border-[#E8E8E8] text-[10px] font-bold text-[#0B2D6B] bg-white hover:bg-[#0B2D6B] hover:text-white transition-all shadow-sm"
+                        className="inline-flex items-center px-3 py-1.5 rounded-lg border border-stroke dark:border-dark-3 text-[10px] font-bold text-primary bg-white hover:bg-primary hover:text-white transition-all shadow-1"
                       >
                         <Eye className="h-3.5 w-3.5 mr-1" />
                         View Profile
@@ -222,10 +222,10 @@ export default function ApplicationsPage() {
 
         {/* Pagination bar */}
         {pagination && pagination.totalPages > 1 && (
-          <div className="bg-white px-6 py-4 border-t border-[#E8E8E8] flex items-center justify-between">
-            <div className="text-xs text-[#071E4A]/60 font-semibold">
-              Showing page <span className="font-bold text-[#071E4A]">{pagination.page}</span> of{" "}
-              <span className="font-bold text-[#071E4A]">{pagination.totalPages}</span> ({pagination.total} entries)
+          <div className="bg-white px-6 py-4 border-t border-stroke dark:border-dark-3 flex items-center justify-between">
+            <div className="text-xs text-dark-5 dark:text-dark-6 font-semibold">
+              Showing page <span className="font-bold text-dark dark:text-white">{pagination.page}</span> of{" "}
+              <span className="font-bold text-dark dark:text-white">{pagination.totalPages}</span> ({pagination.total} entries)
             </div>
             <div className="flex space-x-2">
               <button
@@ -234,9 +234,9 @@ export default function ApplicationsPage() {
                   setPage((p) => Math.max(p - 1, 1));
                 }}
                 disabled={page === 1}
-                className="p-2 border border-[#E8E8E8] rounded-xl hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-white transition-colors"
+                className="p-2 border border-stroke dark:border-dark-3 rounded-xl hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-white transition-colors"
               >
-                <ChevronLeft className="h-4 w-4 text-[#071E4A]" />
+                <ChevronLeft className="h-4 w-4 text-dark dark:text-white" />
               </button>
               <button
                 onClick={() => {
@@ -244,9 +244,9 @@ export default function ApplicationsPage() {
                   setPage((p) => Math.min(p + 1, pagination.totalPages));
                 }}
                 disabled={page === pagination.totalPages}
-                className="p-2 border border-[#E8E8E8] rounded-xl hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-white transition-colors"
+                className="p-2 border border-stroke dark:border-dark-3 rounded-xl hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-white transition-colors"
               >
-                <ChevronRight className="h-4 w-4 text-[#071E4A]" />
+                <ChevronRight className="h-4 w-4 text-dark dark:text-white" />
               </button>
             </div>
           </div>

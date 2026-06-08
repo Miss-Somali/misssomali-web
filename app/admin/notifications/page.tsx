@@ -114,8 +114,8 @@ export default function NotificationsPage() {
       
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-[#071E4A]">Broadcast Hub</h1>
-        <p className="text-sm text-[#071E4A]/60 mt-1">
+        <h1 className="text-2xl font-extrabold text-dark dark:text-white">Broadcast Hub</h1>
+        <p className="text-sm text-dark-5 dark:text-dark-6 mt-1">
           Send platform announcements, preliminary update bulletins, or direct private feedback notifications.
         </p>
       </div>
@@ -123,9 +123,9 @@ export default function NotificationsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Left 2 Columns: Dispatch Wizard */}
-        <div className="lg:col-span-2 bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm">
-          <h2 className="text-sm font-extrabold text-[#071E4A] mb-6 uppercase tracking-wider flex items-center border-b border-[#E8E8E8] pb-2">
-            <Send className="h-4.5 w-4.5 mr-2 text-[#0B2D6B]" /> Dispatch Notification
+        <div className="lg:col-span-2 bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 shadow-1">
+          <h2 className="text-sm font-extrabold text-dark dark:text-white mb-6 uppercase tracking-wider flex items-center border-b border-stroke dark:border-dark-3 pb-2">
+            <Send className="h-4.5 w-4.5 mr-2 text-primary" /> Dispatch Notification
           </h2>
 
           <form onSubmit={handleSend} className="space-y-4">
@@ -145,7 +145,7 @@ export default function NotificationsPage() {
                 <select
                   value={target}
                   onChange={(e) => setTarget(e.target.value)}
-                  className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+                  className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
                 >
                   <option value="all">📢 Broadcast (All Approved & Shortlisted Contestants)</option>
                   {contestants.map((c) => (
@@ -165,7 +165,7 @@ export default function NotificationsPage() {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+                className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
               >
                 <option value="system">System Broadcast (Maintenance, Rules)</option>
                 <option value="application_update">Application Bulletin (Status changes, steps updates)</option>
@@ -184,7 +184,7 @@ export default function NotificationsPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., Grand Coronation Schedule Announcement"
-                className="w-full border border-[#E8E8E8] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+                className="w-full border border-stroke dark:border-dark-3 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
               />
             </div>
 
@@ -199,7 +199,7 @@ export default function NotificationsPage() {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message description here. This will display in the contestant portal inbox."
                 rows={5}
-                className="w-full border border-[#E8E8E8] rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B2D6B] text-[#071E4A]"
+                className="w-full border border-stroke dark:border-dark-3 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary text-dark dark:text-white"
               />
             </div>
 
@@ -208,7 +208,7 @@ export default function NotificationsPage() {
               <button
                 type="submit"
                 disabled={sending}
-                className="w-full inline-flex items-center justify-center px-4 py-3 bg-[#0B2D6B] hover:bg-[#071E4A] text-white rounded-xl text-xs font-bold transition-all shadow-md"
+                className="w-full inline-flex items-center justify-center px-4 py-3 bg-primary hover:bg-dark text-white rounded-xl text-xs font-bold transition-all shadow-2"
               >
                 {sending ? (
                   <Loader2 className="animate-spin h-4 w-4 mr-2" />
@@ -223,34 +223,34 @@ export default function NotificationsPage() {
         </div>
 
         {/* Right 1 Column: Dispatch History */}
-        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm flex flex-col max-h-[600px] overflow-hidden">
-          <h2 className="text-sm font-extrabold text-[#071E4A] mb-4 uppercase tracking-wider flex items-center border-b border-[#E8E8E8] pb-2">
-            <History className="h-4.5 w-4.5 mr-2 text-[#0B2D6B]" /> Sent History
+        <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 shadow-1 flex flex-col max-h-[600px] overflow-hidden">
+          <h2 className="text-sm font-extrabold text-dark dark:text-white mb-4 uppercase tracking-wider flex items-center border-b border-stroke dark:border-dark-3 pb-2">
+            <History className="h-4.5 w-4.5 mr-2 text-primary" /> Sent History
           </h2>
           
           <div className="mt-2 space-y-4 overflow-y-auto pr-1 flex-1">
             {loading ? (
               <div className="py-8 flex justify-center items-center">
-                <Loader2 className="animate-spin h-6 w-6 text-[#0B2D6B]" />
+                <Loader2 className="animate-spin h-6 w-6 text-primary" />
               </div>
             ) : history.length === 0 ? (
-              <p className="text-xs text-[#071E4A]/60 text-center py-8">No notifications sent yet.</p>
+              <p className="text-xs text-dark-5 dark:text-dark-6 text-center py-8">No notifications sent yet.</p>
             ) : (
               history.map((log) => (
-                <div key={log.id} className="p-3 border border-[#E8E8E8] rounded-xl space-y-1.5 hover:shadow-sm transition-all duration-200">
+                <div key={log.id} className="p-3 border border-stroke dark:border-dark-3 rounded-xl space-y-1.5 hover:shadow-1 transition-all duration-200">
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase bg-gray-50 border border-gray-200">
                       {log.type}
                     </span>
-                    <span className="text-[9px] text-[#071E4A]/40 font-semibold">
+                    <span className="text-[9px] text-dark-6 font-semibold">
                       {new Date(log.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <h4 className="text-xs font-extrabold text-[#071E4A]">{log.title}</h4>
-                  <p className="text-[10px] text-[#071E4A]/70 line-clamp-2 leading-relaxed">
+                  <h4 className="text-xs font-extrabold text-dark dark:text-white">{log.title}</h4>
+                  <p className="text-[10px] text-dark-5 dark:text-dark-6 line-clamp-2 leading-relaxed">
                     {log.message}
                   </p>
-                  <div className="text-[8px] font-bold text-[#0B2D6B] pt-1 flex items-center">
+                  <div className="text-[8px] font-bold text-primary pt-1 flex items-center">
                     <User className="h-3 w-3 mr-0.5" /> Sent to: {log.user?.fullName || "Contestant"}
                   </div>
                 </div>

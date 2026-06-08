@@ -47,7 +47,7 @@ export default function StatusPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
@@ -59,13 +59,13 @@ export default function StatusPage() {
         <div className="h-16 w-16 bg-gray-50 border border-gray-200 rounded-full flex items-center justify-center mx-auto text-gray-400 mb-4">
           <FileText className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-extrabold text-[#071E4A] mb-2">No Application Found</h2>
-        <p className="text-sm text-[#071E4A]/60 mb-6 leading-relaxed">
+        <h2 className="text-xl font-extrabold text-dark dark:text-white mb-2">No Application Found</h2>
+        <p className="text-sm text-dark-5 dark:text-dark-6 mb-6 leading-relaxed">
           You haven&apos;t initiated your pageant application. Start compiling your attributes and photos in our step wizard.
         </p>
         <Link
           href="/portal/application"
-          className="inline-flex items-center py-3 px-6 rounded-full text-sm font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#F0D898] transition-colors shadow-sm"
+          className="inline-flex items-center py-3 px-6 rounded-full text-sm font-bold text-white bg-primary hover:bg-primary/90 transition-colors shadow-1"
         >
           Start Application Wizard <ChevronRight className="ml-2 h-4 w-4" />
         </Link>
@@ -80,13 +80,13 @@ export default function StatusPage() {
         <div className="h-16 w-16 bg-amber-50 border border-amber-200 rounded-full flex items-center justify-center mx-auto text-amber-500 mb-4">
           <Clock className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-extrabold text-[#071E4A] mb-2">Application Draft Active</h2>
-        <p className="text-sm text-[#071E4A]/60 mb-6 leading-relaxed">
+        <h2 className="text-xl font-extrabold text-dark dark:text-white mb-2">Application Draft Active</h2>
+        <p className="text-sm text-dark-5 dark:text-dark-6 mb-6 leading-relaxed">
           Your questionnaire is currently in draft format and has not been submitted for evaluation yet. Complete all steps to locked-submit.
         </p>
         <Link
           href="/portal/application"
-          className="inline-flex items-center py-3 px-6 rounded-full text-sm font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#F0D898] transition-colors shadow-sm"
+          className="inline-flex items-center py-3 px-6 rounded-full text-sm font-bold text-white bg-primary hover:bg-primary/90 transition-colors shadow-1"
         >
           Continue Application Draft <ChevronRight className="ml-2 h-4 w-4" />
         </Link>
@@ -145,16 +145,16 @@ export default function StatusPage() {
     <div className="max-w-3xl mx-auto space-y-8 animate-fadeIn">
       {/* Title */}
       <div>
-        <h1 className="text-2xl font-extrabold text-[#071E4A]">Selection Status</h1>
-        <p className="text-sm text-[#071E4A]/60">Track your candidacy in real-time as we evaluate candidate files.</p>
+        <h1 className="text-2xl font-extrabold text-dark dark:text-white">Selection Status</h1>
+        <p className="text-sm text-dark-5 dark:text-dark-6">Track your candidacy in real-time as we evaluate candidate files.</p>
       </div>
 
       {/* Main Status Panel */}
-      <div className={`border rounded-2xl p-6 sm:p-8 bg-white shadow-sm space-y-6 ${statusView.color}`}>
+      <div className={`border rounded-[10px] p-6 sm:p-8 bg-white shadow-1 space-y-6 ${statusView.color}`}>
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold text-[#071E4A]">{statusView.title}</h2>
-            <p className="text-sm text-[#071E4A]/75 mt-1 leading-relaxed">{statusView.description}</p>
+            <h2 className="text-xl font-bold text-dark dark:text-white">{statusView.title}</h2>
+            <p className="text-sm text-dark-5 dark:text-dark-6 mt-1 leading-relaxed">{statusView.description}</p>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
             Last Updated: {new Date(appData.updatedAt).toLocaleDateString()}
@@ -162,18 +162,18 @@ export default function StatusPage() {
         </div>
 
         {/* Admin Feedback Box */}
-        <div className="bg-white/70 border border-white/80 rounded-xl p-4 flex items-start space-x-3 text-[#071E4A]/90">
-          <MessageSquare className="h-5 w-5 text-[#0B2D6B] mt-0.5 flex-shrink-0" />
+        <div className="bg-white/70 border border-white/80 rounded-xl p-4 flex items-start space-x-3 text-dark-5 dark:text-dark-6">
+          <MessageSquare className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
           <div>
-            <span className="text-xs font-bold text-[#0B2D6B]">Administrative Feedback Remarks:</span>
+            <span className="text-xs font-bold text-primary">Administrative Feedback Remarks:</span>
             <p className="text-xs sm:text-sm mt-1 leading-relaxed">{statusView.remarks}</p>
           </div>
         </div>
       </div>
 
       {/* Evaluation Pipeline Tracker */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 sm:p-8 shadow-sm">
-        <h3 className="text-lg font-bold text-[#071E4A] mb-6">Evaluation Pipeline</h3>
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 sm:p-8 shadow-1">
+        <h3 className="text-lg font-bold text-dark dark:text-white mb-6">Evaluation Pipeline</h3>
         
         <div className="space-y-6 relative">
           {/* Vertical connection line */}
@@ -185,8 +185,8 @@ export default function StatusPage() {
             let colorClass = "bg-white border-gray-200 text-gray-300";
 
             if (item.done) {
-              icon = <UserCheck className="h-5 w-5 text-[#0B2D6B]" />;
-              colorClass = "bg-blue-50 border-[#0B2D6B] text-[#0B2D6B]";
+              icon = <UserCheck className="h-5 w-5 text-primary" />;
+              colorClass = "bg-blue-50 border-primary text-primary";
             } else if (isFailed) {
               icon = <AlertCircle className="h-5 w-5 text-red-500" />;
               colorClass = "bg-red-50 border-red-500 text-red-500";
@@ -198,10 +198,10 @@ export default function StatusPage() {
                   {icon}
                 </div>
                 <div className="self-center">
-                  <h4 className={`text-sm font-bold ${item.done ? "text-[#071E4A]" : isFailed ? "text-red-500" : "text-[#071E4A]/40"}`}>
+                  <h4 className={`text-sm font-bold ${item.done ? "text-dark dark:text-white" : isFailed ? "text-red-500" : "text-dark-6"}`}>
                     {item.label}
                   </h4>
-                  <p className="text-xs text-[#071E4A]/60 mt-0.5">{item.desc}</p>
+                  <p className="text-xs text-dark-5 dark:text-dark-6 mt-0.5">{item.desc}</p>
                 </div>
               </div>
             );

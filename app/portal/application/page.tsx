@@ -195,7 +195,7 @@ export default function ApplicationWizard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
+        <Loader2 className="animate-spin h-8 w-8 text-primary" />
       </div>
     );
   }
@@ -203,15 +203,15 @@ export default function ApplicationWizard() {
   // If application is already submitted and locked, redirect to status or show locked wizard
   if (isSubmitted && activeStep < 6) {
     return (
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-8 max-w-2xl mx-auto text-center shadow-md animate-fadeIn">
-        <Lock className="h-16 w-16 text-[#0B2D6B] mx-auto mb-4" />
-        <h2 className="text-2xl font-extrabold text-[#071E4A] mb-2">Application Already Submitted</h2>
-        <p className="text-sm text-[#071E4A]/70 mb-6 leading-relaxed">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-8 max-w-2xl mx-auto text-center shadow-2 animate-fadeIn">
+        <Lock className="h-16 w-16 text-primary mx-auto mb-4" />
+        <h2 className="text-2xl font-extrabold text-dark dark:text-white mb-2">Application Already Submitted</h2>
+        <p className="text-sm text-dark-5 dark:text-dark-6 mb-6 leading-relaxed">
           Your contestant application for Miss Somali 2026 has been locked down and is currently under review by our administrative board. You cannot make any further modifications.
         </p>
         <button
           onClick={() => router.push("/portal/status")}
-          className="py-3 px-6 rounded-full font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors"
+          className="py-3 px-6 rounded-full font-bold text-white bg-primary hover:bg-dark transition-colors"
         >
           Track Review Pipeline
         </button>
@@ -231,17 +231,17 @@ export default function ApplicationWizard() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
       {/* Page Title & Status */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#E8E8E8] pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stroke dark:border-dark-3 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#071E4A]">Miss Somali Application Wizard</h1>
-          <p className="text-xs sm:text-sm text-[#071E4A]/60">Fill in the questionnaire details. Progress is auto-savable.</p>
+          <h1 className="text-2xl font-extrabold text-dark dark:text-white">Miss Somali Application Wizard</h1>
+          <p className="text-xs sm:text-sm text-dark-5 dark:text-dark-6">Fill in the questionnaire details. Progress is auto-savable.</p>
         </div>
         {activeStep < 6 && (
           <div className="mt-4 sm:mt-0 flex gap-3">
             <button
               onClick={handleSaveDraft}
               disabled={saving}
-              className="flex items-center px-4 py-2 text-xs font-bold border border-[#0B2D6B]/20 rounded-full text-[#0B2D6B] bg-white hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="flex items-center px-4 py-2 text-xs font-bold border border-primary/20 rounded-full text-primary bg-white hover:bg-gray-50 transition-colors disabled:opacity-50"
             >
               {saving ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
               Save Draft
@@ -251,7 +251,7 @@ export default function ApplicationWizard() {
       </div>
 
       {/* Wizard Step Tracker */}
-      <div className="bg-white border border-[#E8E8E8] rounded-xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-xl p-4 sm:p-6 shadow-1">
         <div className="flex justify-between items-center relative">
           <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-0.5 bg-[#E8E8E8] z-0" />
           {stepsList.map((step) => (
@@ -264,15 +264,15 @@ export default function ApplicationWizard() {
               <div
                 className={`h-8 w-8 rounded-full flex items-center justify-center border-2 text-xs font-bold transition-all duration-200 ${
                   activeStep === step.num
-                    ? "bg-[#0B2D6B] border-[#0B2D6B] text-white"
+                    ? "bg-primary border-primary text-white"
                     : activeStep > step.num
-                    ? "bg-[#E8C97A] border-[#E8C97A] text-[#071E4A]"
-                    : "bg-white border-[#E8E8E8] text-[#071E4A]/40"
+                    ? "bg-primary border-primary text-white"
+                    : "bg-white border-stroke dark:border-dark-3 text-dark-6"
                 }`}
               >
                 {activeStep > step.num ? <Check className="h-4 w-4" /> : step.num}
               </div>
-              <span className="hidden md:block mt-1 text-[10px] font-extrabold uppercase tracking-wider text-[#071E4A]/55">
+              <span className="hidden md:block mt-1 text-[10px] font-extrabold uppercase tracking-wider text-dark-5 dark:text-dark-6">
                 {step.name}
               </span>
             </button>
@@ -299,64 +299,64 @@ export default function ApplicationWizard() {
       )}
 
       {/* Wizard Steps Form Panel */}
-      <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 sm:p-8 shadow-sm">
+      <div className="bg-white border border-stroke dark:border-dark-3 rounded-[10px] p-6 sm:p-8 shadow-1">
         
         {/* Step 1: Personal Info */}
         {activeStep === 1 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-[#071E4A] border-b border-[#E8E8E8] pb-2">Step 1: Personal Information</h3>
+            <h3 className="text-lg font-bold text-dark dark:text-white border-b border-stroke dark:border-dark-3 pb-2">Step 1: Personal Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Full Name</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Full Name</label>
                 <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="Official Contestant Name"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Date of Birth</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Date of Birth</label>
                 <input
                   type="date"
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Country of Residence</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Country of Residence</label>
                 <input
                   type="text"
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. Somalia"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">City / Location</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">City / Location</label>
                 <input
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. Mogadishu"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Phone Number</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Phone Number</label>
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="+252..."
                 />
               </div>
@@ -367,15 +367,15 @@ export default function ApplicationWizard() {
         {/* Step 2: Background & Attributes */}
         {activeStep === 2 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-[#071E4A] border-b border-[#E8E8E8] pb-2">Step 2: Educational & Background Attributes</h3>
+            <h3 className="text-lg font-bold text-dark dark:text-white border-b border-stroke dark:border-dark-3 pb-2">Step 2: Educational & Background Attributes</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Highest Education Level</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Highest Education Level</label>
                 <select
                   name="educationLevel"
                   value={formData.educationLevel}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                 >
                   <option value="">Select Level</option>
                   <option value="High School">High School</option>
@@ -386,47 +386,47 @@ export default function ApplicationWizard() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Current Occupation / Major</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Current Occupation / Major</label>
                 <input
                   type="text"
                   name="occupation"
                   value={formData.occupation}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. Student, Graphic Designer"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Height (cm)</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Height (cm)</label>
                 <input
                   type="number"
                   name="height"
                   value={formData.height}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. 172"
                   step="0.1"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Languages Spoken</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Languages Spoken</label>
                 <input
                   type="text"
                   name="languages"
                   value={formData.languages}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. Somali, English, Arabic"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Skills & Hobbies</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Skills & Hobbies</label>
                 <input
                   type="text"
                   name="skills"
                   value={formData.skills}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="e.g. Public speaking, poetry, singing"
                 />
               </div>
@@ -437,49 +437,49 @@ export default function ApplicationWizard() {
         {/* Step 3: Motivation */}
         {activeStep === 3 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-[#071E4A] border-b border-[#E8E8E8] pb-2">Step 3: Intent & Motivation</h3>
+            <h3 className="text-lg font-bold text-dark dark:text-white border-b border-stroke dark:border-dark-3 pb-2">Step 3: Intent & Motivation</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Brief Bio</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Brief Bio</label>
                 <textarea
                   name="bio"
                   rows={3}
                   value={formData.bio}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="Write a brief professional background bio..."
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Why do you want to represent Miss Somali Pageant?</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Why do you want to represent Miss Somali Pageant?</label>
                 <textarea
                   name="motivationWhy"
                   rows={4}
                   value={formData.motivationWhy}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="Explain why you wish to enter this cultural advocacy pageant..."
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">Share a personal story of achievement</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">Share a personal story of achievement</label>
                 <textarea
                   name="personalStory"
                   rows={3}
                   value={formData.personalStory}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="Share a milestone or obstacle you successfully overcame..."
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">What are your future career/social goals?</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-dark dark:text-white">What are your future career/social goals?</label>
                 <textarea
                   name="goals"
                   rows={3}
                   value={formData.goals}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-[#E8E8E8] rounded-lg text-sm text-[#071E4A]"
+                  className="mt-1 block w-full px-3 py-2 border border-stroke dark:border-dark-3 rounded-lg text-sm text-dark dark:text-white"
                   placeholder="Where do you see yourself in the next 5 years?"
                 />
               </div>
@@ -490,14 +490,14 @@ export default function ApplicationWizard() {
         {/* Step 4: Photo Selection */}
         {activeStep === 4 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-[#071E4A] border-b border-[#E8E8E8] pb-2">Step 4: Cloudflare R2 Mock Photo Uploads</h3>
+            <h3 className="text-lg font-bold text-dark dark:text-white border-b border-stroke dark:border-dark-3 pb-2">Step 4: Cloudflare R2 Mock Photo Uploads</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Profile Photo */}
-              <div className="border border-[#E8E8E8] rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
+              <div className="border border-stroke dark:border-dark-3 rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
                 <div className="space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#071E4A]/60">Type: Profile (Portrait)</span>
-                  <div className="h-32 w-32 bg-white rounded-lg border border-[#E8E8E8] flex items-center justify-center overflow-hidden relative mx-auto">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-dark-5 dark:text-dark-6">Type: Profile (Portrait)</span>
+                  <div className="h-32 w-32 bg-white rounded-lg border border-stroke dark:border-dark-3 flex items-center justify-center overflow-hidden relative mx-auto">
                     {formData.photos.find((p) => p.type === "profile") ? (
                       <img
                         src={formData.photos.find((p) => p.type === "profile")?.url}
@@ -505,24 +505,24 @@ export default function ApplicationWizard() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <Upload className="h-8 w-8 text-[#071E4A]/20" />
+                      <Upload className="h-8 w-8 text-dark dark:text-white/20" />
                     )}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => handlePhotoMockUpload("profile")}
-                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-[#0B2D6B] text-white hover:bg-[#071E4A] transition-colors"
+                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-primary text-white hover:bg-dark transition-colors"
                 >
                   <Upload className="h-3.5 w-3.5 mr-2" /> Upload Portrait
                 </button>
               </div>
 
               {/* Full Body Photo */}
-              <div className="border border-[#E8E8E8] rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
+              <div className="border border-stroke dark:border-dark-3 rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
                 <div className="space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#071E4A]/60">Type: Full Body</span>
-                  <div className="h-32 w-32 bg-white rounded-lg border border-[#E8E8E8] flex items-center justify-center overflow-hidden relative mx-auto">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-dark-5 dark:text-dark-6">Type: Full Body</span>
+                  <div className="h-32 w-32 bg-white rounded-lg border border-stroke dark:border-dark-3 flex items-center justify-center overflow-hidden relative mx-auto">
                     {formData.photos.find((p) => p.type === "full_body") ? (
                       <img
                         src={formData.photos.find((p) => p.type === "full_body")?.url}
@@ -530,31 +530,31 @@ export default function ApplicationWizard() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <Upload className="h-8 w-8 text-[#071E4A]/20" />
+                      <Upload className="h-8 w-8 text-dark dark:text-white/20" />
                     )}
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => handlePhotoMockUpload("full_body")}
-                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-[#0B2D6B] text-white hover:bg-[#071E4A] transition-colors"
+                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-primary text-white hover:bg-dark transition-colors"
                 >
                   <Upload className="h-3.5 w-3.5 mr-2" /> Upload Full Body
                 </button>
               </div>
 
               {/* Gallery Addition */}
-              <div className="border border-[#E8E8E8] rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
+              <div className="border border-stroke dark:border-dark-3 rounded-xl p-4 flex flex-col items-center justify-between text-center bg-gray-50/50">
                 <div className="space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#071E4A]/60">Type: Gallery Photos</span>
-                  <div className="h-32 w-32 bg-white rounded-lg border border-[#E8E8E8] flex items-center justify-center overflow-hidden relative mx-auto">
-                    <Upload className="h-8 w-8 text-[#071E4A]/20" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-dark-5 dark:text-dark-6">Type: Gallery Photos</span>
+                  <div className="h-32 w-32 bg-white rounded-lg border border-stroke dark:border-dark-3 flex items-center justify-center overflow-hidden relative mx-auto">
+                    <Upload className="h-8 w-8 text-dark dark:text-white/20" />
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => handlePhotoMockUpload("gallery")}
-                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-[#0B2D6B] text-white hover:bg-[#071E4A] transition-colors"
+                  className="mt-4 flex items-center px-4 py-2 text-xs font-semibold rounded-full bg-primary text-white hover:bg-dark transition-colors"
                 >
                   <Upload className="h-3.5 w-3.5 mr-2" /> Append Gallery Pic
                 </button>
@@ -564,10 +564,10 @@ export default function ApplicationWizard() {
             {/* List of uploaded photos */}
             {formData.photos.length > 0 && (
               <div className="mt-8">
-                <h4 className="text-sm font-bold text-[#071E4A] mb-3">All Active Photos</h4>
+                <h4 className="text-sm font-bold text-dark dark:text-white mb-3">All Active Photos</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {formData.photos.map((photo) => (
-                    <div key={photo.id} className="relative group border border-[#E8E8E8] rounded-lg overflow-hidden h-28">
+                    <div key={photo.id} className="relative group border border-stroke dark:border-dark-3 rounded-lg overflow-hidden h-28">
                       <img src={photo.url} className="h-full w-full object-cover" alt="" />
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <span className="text-[10px] font-bold text-white bg-white/20 px-2 py-0.5 rounded">
@@ -592,31 +592,31 @@ export default function ApplicationWizard() {
         {/* Step 5: Review & Validate Details */}
         {activeStep === 5 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-bold text-[#071E4A] border-b border-[#E8E8E8] pb-2">Step 5: Review & Submit Details</h3>
+            <h3 className="text-lg font-bold text-dark dark:text-white border-b border-stroke dark:border-dark-3 pb-2">Step 5: Review & Submit Details</h3>
             
-            <div className="space-y-6 divide-y divide-[#E8E8E8]">
+            <div className="space-y-6 divide-y divide-stroke dark:divide-dark-3">
               {/* Section 1 */}
               <div className="pt-2">
                 <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-bold text-[#0B2D6B]">Personal details</h4>
-                  <button onClick={() => setActiveStep(1)} className="text-xs font-semibold text-[#0B2D6B] hover:underline">Edit</button>
+                  <h4 className="text-sm font-bold text-primary">Personal details</h4>
+                  <button onClick={() => setActiveStep(1)} className="text-xs font-semibold text-primary hover:underline">Edit</button>
                 </div>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Full Name</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.fullName || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.fullName || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Date of Birth</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.dateOfBirth || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.dateOfBirth || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Phone</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.phone || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.phone || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Residence</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.city}, {formData.country}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.city}, {formData.country}</dd>
                   </div>
                 </dl>
               </div>
@@ -624,29 +624,29 @@ export default function ApplicationWizard() {
               {/* Section 2 */}
               <div className="pt-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-bold text-[#0B2D6B]">Background & Attributes</h4>
-                  <button onClick={() => setActiveStep(2)} className="text-xs font-semibold text-[#0B2D6B] hover:underline">Edit</button>
+                  <h4 className="text-sm font-bold text-primary">Background & Attributes</h4>
+                  <button onClick={() => setActiveStep(2)} className="text-xs font-semibold text-primary hover:underline">Edit</button>
                 </div>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm">
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Education Level</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.educationLevel || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.educationLevel || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Occupation / Major</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.occupation || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.occupation || "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Height</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.height ? `${formData.height} cm` : "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.height ? `${formData.height} cm` : "—"}</dd>
                   </div>
                   <div>
                     <dt className="text-xs text-gray-500 font-medium">Languages</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.languages || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.languages || "—"}</dd>
                   </div>
                   <div className="sm:col-span-2">
                     <dt className="text-xs text-gray-500 font-medium">Skills</dt>
-                    <dd className="font-semibold text-[#071E4A]">{formData.skills || "—"}</dd>
+                    <dd className="font-semibold text-dark dark:text-white">{formData.skills || "—"}</dd>
                   </div>
                 </dl>
               </div>
@@ -654,17 +654,17 @@ export default function ApplicationWizard() {
               {/* Section 3 */}
               <div className="pt-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-bold text-[#0B2D6B]">Motivation Essay Responses</h4>
-                  <button onClick={() => setActiveStep(3)} className="text-xs font-semibold text-[#0B2D6B] hover:underline">Edit</button>
+                  <h4 className="text-sm font-bold text-primary">Motivation Essay Responses</h4>
+                  <button onClick={() => setActiveStep(3)} className="text-xs font-semibold text-primary hover:underline">Edit</button>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div>
                     <span className="text-xs text-gray-500 block font-medium">Brief Bio</span>
-                    <p className="font-medium text-[#071E4A] leading-relaxed whitespace-pre-wrap">{formData.bio || "—"}</p>
+                    <p className="font-medium text-dark dark:text-white leading-relaxed whitespace-pre-wrap">{formData.bio || "—"}</p>
                   </div>
                   <div>
                     <span className="text-xs text-gray-500 block font-medium">Why Miss Somali Pageant?</span>
-                    <p className="font-medium text-[#071E4A] leading-relaxed whitespace-pre-wrap">{formData.motivationWhy || "—"}</p>
+                    <p className="font-medium text-dark dark:text-white leading-relaxed whitespace-pre-wrap">{formData.motivationWhy || "—"}</p>
                   </div>
                 </div>
               </div>
@@ -672,8 +672,8 @@ export default function ApplicationWizard() {
               {/* Section 4 */}
               <div className="pt-4">
                 <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-bold text-[#0B2D6B]">Uploaded Contestant Images</h4>
-                  <button onClick={() => setActiveStep(4)} className="text-xs font-semibold text-[#0B2D6B] hover:underline">Edit</button>
+                  <h4 className="text-sm font-bold text-primary">Uploaded Contestant Images</h4>
+                  <button onClick={() => setActiveStep(4)} className="text-xs font-semibold text-primary hover:underline">Edit</button>
                 </div>
                 <div className="flex gap-4">
                   {formData.photos.map((p) => (
@@ -686,15 +686,15 @@ export default function ApplicationWizard() {
               </div>
             </div>
 
-            <div className="border-t border-[#E8E8E8] pt-6 text-center bg-amber-50/50 rounded-xl p-4 border">
-              <h4 className="text-sm font-bold text-[#071E4A] mb-1">Declaration Statement</h4>
-              <p className="text-xs text-[#071E4A]/70 mb-4 max-w-xl mx-auto leading-relaxed">
+            <div className="border-t border-stroke dark:border-dark-3 pt-6 text-center bg-amber-50/50 rounded-xl p-4 border">
+              <h4 className="text-sm font-bold text-dark dark:text-white mb-1">Declaration Statement</h4>
+              <p className="text-xs text-dark-5 dark:text-dark-6 mb-4 max-w-xl mx-auto leading-relaxed">
                 By clicking &quot;Submit Final Application&quot;, you declare that all provided attributes, personal details, photos, and essay answers are authentic and accurate. Your form will be locked down and edits disabled.
               </p>
               <button
                 onClick={handleSubmitApplication}
                 disabled={submitting}
-                className="py-3 px-6 rounded-full font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#F0D898] transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center mx-auto"
+                className="py-3 px-6 rounded-full font-bold text-white bg-primary hover:bg-primary/90 transition-colors shadow-1 disabled:opacity-50 flex items-center justify-center mx-auto"
               >
                 {submitting ? <Loader2 className="animate-spin h-5 w-5 mr-2" /> : <FileCheck className="h-5 w-5 mr-2" />}
                 Submit Final Application
@@ -709,13 +709,13 @@ export default function ApplicationWizard() {
             <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600">
               <Check className="h-10 w-10" />
             </div>
-            <h2 className="text-2xl font-extrabold text-[#071E4A]">Application Submitted Successfully!</h2>
-            <p className="text-sm text-[#071E4A]/70 max-w-lg mx-auto leading-relaxed">
+            <h2 className="text-2xl font-extrabold text-dark dark:text-white">Application Submitted Successfully!</h2>
+            <p className="text-sm text-dark-5 dark:text-dark-6 max-w-lg mx-auto leading-relaxed">
               Congratulations! Your contestant entry has been successfully submitted and locked. The Miss Somali Review Board has been notified. You can track your status in the Selection Pipeline menu.
             </p>
             <button
               onClick={() => router.push("/portal/status")}
-              className="py-3 px-6 rounded-full font-bold text-white bg-[#0B2D6B] hover:bg-[#071E4A] transition-colors"
+              className="py-3 px-6 rounded-full font-bold text-white bg-primary hover:bg-dark transition-colors"
             >
               Go to Selection Status
             </button>
@@ -724,11 +724,11 @@ export default function ApplicationWizard() {
 
         {/* Wizard Footer Nav Buttons */}
         {activeStep < 6 && (
-          <div className="mt-8 pt-6 border-t border-[#E8E8E8] flex justify-between">
+          <div className="mt-8 pt-6 border-t border-stroke dark:border-dark-3 flex justify-between">
             <button
               onClick={prevStep}
               disabled={activeStep === 1}
-              className="flex items-center px-4 py-2 border border-[#E8E8E8] rounded-full text-xs font-bold text-[#071E4A]/75 hover:bg-gray-50 transition-colors disabled:opacity-30"
+              className="flex items-center px-4 py-2 border border-stroke dark:border-dark-3 rounded-full text-xs font-bold text-dark-5 dark:text-dark-6 hover:bg-gray-50 transition-colors disabled:opacity-30"
             >
               <ChevronLeft className="h-4 w-4 mr-2" /> Previous Step
             </button>
@@ -736,7 +736,7 @@ export default function ApplicationWizard() {
             {activeStep < 5 ? (
               <button
                 onClick={nextStep}
-                className="flex items-center px-4 py-2 bg-[#0B2D6B] hover:bg-[#071E4A] rounded-full text-xs font-bold text-white transition-colors"
+                className="flex items-center px-4 py-2 bg-primary hover:bg-dark rounded-full text-xs font-bold text-white transition-colors"
               >
                 Next Step <ChevronRight className="h-4 w-4 ml-2" />
               </button>

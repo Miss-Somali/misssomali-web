@@ -29,7 +29,7 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
-      <DropdownTrigger className="cursor-pointer rounded align-middle ring-[#0B2D6B] ring-offset-2 outline-none focus-visible:ring-1 dark:ring-offset-gray-dark">
+      <DropdownTrigger className="cursor-pointer rounded align-middle ring-primary ring-offset-2 outline-none focus-visible:ring-1 dark:ring-offset-gray-dark">
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
@@ -102,7 +102,7 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
           <Link
             href={profileUrl}
             onClick={() => setIsOpen(false)}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-[#0B2D6B] outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-primary outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
           >
             <UserIcon className="size-4" />
 
@@ -112,7 +112,7 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
           <Link
             href={settingsUrl}
             onClick={() => setIsOpen(false)}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-[#0B2D6B] outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-primary outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
           >
             <SettingsIcon className="size-4" />
 
@@ -145,7 +145,7 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
 function UserAvatar({ name }: { name: string }) {
   const initial = name ? name.charAt(0).toUpperCase() : "U";
   return (
-    <span className="flex size-10 items-center justify-center rounded-full border border-gray-100 bg-[#0B2D6B]/5 text-[#0B2D6B] font-bold text-xs outline-none dark:border-dark-4 dark:bg-dark-2 dark:text-white">
+    <span className="flex size-10 items-center justify-center rounded-full border border-gray-100 bg-primary/5 text-primary font-bold text-xs outline-none dark:border-dark-4 dark:bg-dark-2 dark:text-white">
       {initial}
     </span>
   );

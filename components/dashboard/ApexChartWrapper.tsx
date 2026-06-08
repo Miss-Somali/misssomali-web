@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { ApexOptions } from "apexcharts";
+import type { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexOptions } from "apexcharts";
+
+type ApexChartInstance = {
+  render: () => Promise<unknown>;
+  destroy: () => void;
+};
 
 interface ApexChartWrapperProps {
   options: ApexOptions;
-  series: any[];
+  series: ApexAxisChartSeries | ApexNonAxisChartSeries;
   type: "line" | "area" | "bar" | "pie" | "donut" | "radialBar" | "scatter" | "bubble" | "heatmap" | "candlestick" | "radar" | "polarArea";
   height?: number | string;
   width?: number | string;
@@ -19,13 +24,13 @@ export default function ApexChartWrapper({
   width = "100%",
 }: ApexChartWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<any>(null);
+  const chartRef = useRef<ApexChartInstance | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     let active = true;
-    let chartInstance: any = null;
+    let chartInstance: ApexChartInstance | null = null;
 
     // Load ApexCharts dynamically on the client
     import("apexcharts").then((ApexChartsModule) => {
@@ -36,8 +41,8 @@ export default function ApexChartWrapper({
       if (chartRef.current) {
         try {
           chartRef.current.destroy();
-        } catch (e) {
-          console.warn("Error destroying previous chart instance:", e);
+        } catch (error) {
+          console.warn("Error destroying previous chart instance:", error);
         }
         chartRef.current = null;
       }
@@ -53,15 +58,17 @@ export default function ApexChartWrapper({
         series,
       };
 
-      chartInstance = new ApexCharts(containerRef.current, mergedOptions);
-      chartInstance.render().then(() => {
+      const nextChart = new ApexCharts(containerRef.current, mergedOptions);
+      chartInstance = nextChart;
+
+      nextChart.render().then(() => {
         if (active) {
-          chartRef.current = chartInstance;
+          chartRef.current = nextChart;
         } else {
           // If deactivated during rendering, destroy immediately
           try {
-            chartInstance.destroy();
-          } catch (e) {
+            nextChart.destroy();
+          } catch {
             // ignore
           }
         }
@@ -73,7 +80,7 @@ export default function ApexChartWrapper({
       if (chartInstance) {
         try {
           chartInstance.destroy();
-        } catch (e) {
+        } catch {
           // ignore
         }
       }

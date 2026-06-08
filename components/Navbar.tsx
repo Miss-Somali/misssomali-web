@@ -5,12 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "The Journey", href: "#journey" },
-  { name: "Contestants", href: "#contestants" },
-  { name: "Events", href: "#events" },
-  { name: "About", href: "#about" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/" },
+  { name: "The Process", href: "/#how-it-works" },
+  { name: "Contestants", href: "/#contestants" },
+  { name: "Events", href: "/#grand-finale" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {

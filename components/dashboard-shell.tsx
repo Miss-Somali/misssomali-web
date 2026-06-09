@@ -39,6 +39,7 @@ function DashboardShellContent({
   onSignOut,
 }: DashboardShellProps) {
   const { activeTheme } = useThemeConfig();
+  const shellTheme = section === "portal" ? "default" : activeTheme;
 
   return (
     <SidebarProvider
@@ -50,8 +51,8 @@ function DashboardShellContent({
       }
       className={cn(
         "dashboard-template bg-background text-foreground font-sans antialiased",
-        `theme-${activeTheme}`,
-        activeTheme.endsWith("-scaled") && "theme-scaled"
+        `theme-${shellTheme}`,
+        section !== "portal" && activeTheme.endsWith("-scaled") && "theme-scaled"
       )}
     >
       <AppSidebar
@@ -61,7 +62,10 @@ function DashboardShellContent({
         onSignOut={onSignOut}
       />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader
+          title={section === "portal" ? "Portal" : "Documents"}
+          showThemeControls={section !== "portal"}
+        />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

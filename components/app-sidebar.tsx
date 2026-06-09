@@ -16,6 +16,7 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
+  IconUserCircle,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -174,22 +175,13 @@ const sectionData = {
   portal: {
     ...data,
     navMain: [
-      { ...data.navMain[0], url: "/portal" },
-      { ...data.navMain[1], url: "/portal/application" },
-      { ...data.navMain[2], url: "/portal/status" },
-      { ...data.navMain[3], url: "/portal/events" },
-      { ...data.navMain[4], url: "/portal/profile" },
+      { title: "Dashboard", url: "/portal", icon: IconDashboard },
+      { title: "Application", url: "/portal/application", icon: IconListDetails },
+      { title: "Status", url: "/portal/status", icon: IconChartBar },
+      { title: "Profile", url: "/portal/profile", icon: IconUserCircle },
     ],
-    documents: [
-      { ...data.documents[0], url: "/portal/media" },
-      { ...data.documents[1], url: "/portal/notifications" },
-      { ...data.documents[2], url: "/portal/application" },
-    ],
-    navSecondary: [
-      { ...data.navSecondary[0], url: "/portal/profile" },
-      { ...data.navSecondary[1], url: "/portal" },
-      { ...data.navSecondary[2], url: "/portal/status" },
-    ],
+    documents: [],
+    navSecondary: [],
   },
 };
 
@@ -236,9 +228,13 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarData.navMain} />
-        <NavDocuments items={sidebarData.documents} />
-        <NavSecondary items={sidebarData.navSecondary} className="mt-auto" />
+        <NavMain items={sidebarData.navMain} showActions={section !== "portal"} />
+        {sidebarData.documents.length > 0 && (
+          <NavDocuments items={sidebarData.documents} />
+        )}
+        {sidebarData.navSecondary.length > 0 && (
+          <NavSecondary items={sidebarData.navSecondary} className="mt-auto" />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={sidebarUser} onSignOut={onSignOut} />

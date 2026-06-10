@@ -11,11 +11,13 @@ import * as Popover from "@radix-ui/react-popover";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { format } from "date-fns";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
-// Form validation schema
-const applicationSchema = z.object({
+// Step-by-step validation schemas
+const step0Schema = z.object({
   fullName: z.string().min(3, "Full name must be at least 3 characters"),
-  phone: z.string().min(5, "Phone number is required"),
+  phone: z.string().regex(/^\+?[0-9\s-]{7,15}$/, "Invalid phone format. Must be a valid number (e.g. +25261xxxxxxx)"),
   city: z.string().min(2, "City is required"),
   country: z.string().min(2, "Country is required"),
   dateOfBirth: z.string().min(10, "Valid date of birth is required").refine((val) => {
@@ -31,16 +33,25 @@ const applicationSchema = z.object({
   }, {
     message: "You must be at least 18 years old to apply",
   }),
+});
+
+const step1Schema = z.object({
   educationLevel: z.string().min(2, "Education level is required"),
   occupation: z.string().min(2, "Occupation is required"),
   height: z.string().min(1, "Height is required"),
-  skills: z.string().optional(),
-  languages: z.string().optional(),
+  skills: z.string().min(1, "Please select at least one skill / talent"),
+  languages: z.string().min(1, "Please select at least one language"),
+});
+
+const step2Schema = z.object({
   motivationWhy: z.string().min(20, "Motivation statement must be at least 20 characters"),
   personalStory: z.string().optional(),
   goals: z.string().optional(),
   bio: z.string().optional(),
 });
+
+// Full Application validation schema
+const applicationSchema = step0Schema.merge(step1Schema).merge(step2Schema);
 
 type ApplicationFormValues = z.infer<typeof applicationSchema>;
 
@@ -56,14 +67,9 @@ export default function ApplicationPage() {
   const [fullBodyUploadProgress, setFullBodyUploadProgress] = useState<number | null>(null);
   const [dobOpen, setDobOpen] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<ApplicationFormValues>({
+  const form = useForm<ApplicationFormValues>({
     resolver: zodResolver(applicationSchema),
+    mode: "onChange",
     defaultValues: {
       fullName: "",
       phone: "",
@@ -82,7 +88,41 @@ export default function ApplicationPage() {
     },
   });
 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = form;
+
   const formValues = watch();
+
+  const isStepValid = (stepIdx: number): boolean => {
+    if (stepIdx === 0) {
+      return step0Schema.safeParse(formValues).success;
+    }
+    if (stepIdx === 1) {
+      return step1Schema.safeParse(formValues).success;
+    }
+    if (stepIdx === 2) {
+      return step2Schema.safeParse(formValues).success;
+    }
+    if (stepIdx === 3) {
+      return photos.some(p => p.type === "profile") && photos.some(p => p.type === "full_body");
+    }
+    return true;
+  };
+
+  const canNavigateToStep = (targetIdx: number): boolean => {
+    for (let i = 0; i < targetIdx; i++) {
+      if (!isStepValid(i)) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   // Load draft data initially
   useEffect(() => {
@@ -286,6 +326,44 @@ export default function ApplicationPage() {
     }
   }
 
+  const handleNextStep = async () => {
+    const stepFields = [
+      ["fullName", "phone", "city", "country", "dateOfBirth"],
+      ["educationLevel", "occupation", "height", "languages", "skills"],
+      ["motivationWhy", "personalStory", "goals", "bio"],
+    ];
+
+    const fields = stepFields[activeStep];
+    if (fields) {
+      const isStepValid = await trigger(fields as any);
+      if (!isStepValid) return;
+
+      // Save draft immediately to DB on next step click
+      setAutoSaving(true);
+      try {
+        await fetch("/api/portal/application", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formValues),
+        });
+      } catch (err) {
+        console.error("Save draft failed on step transition:", err);
+      } finally {
+        setAutoSaving(false);
+      }
+    } else if (activeStep === 3) {
+      // Photo step
+      const hasProfilePhoto = photos.some(p => p.type === "profile");
+      const hasFullBodyPhoto = photos.some(p => p.type === "full_body");
+      if (!hasProfilePhoto || !hasFullBodyPhoto) {
+        alert("Please upload both a Profile Close-up Photo and a Full-body Photo.");
+        return;
+      }
+    }
+
+    setActiveStep(prev => prev + 1);
+  };
+
   // Submit complete application
   async function onSubmitForm(data: ApplicationFormValues) {
     const hasProfilePhoto = photos.some(p => p.type === "profile");
@@ -293,6 +371,11 @@ export default function ApplicationPage() {
 
     if (!hasProfilePhoto || !hasFullBodyPhoto) {
       alert("Please upload both a Profile Close-up Photo and a Full-body Photo before submitting.");
+      return;
+    }
+
+    if (!canNavigateToStep(4)) {
+      alert("Please correct validation errors on previous steps before submitting.");
       return;
     }
 
@@ -390,8 +473,9 @@ export default function ApplicationPage() {
           <button
             key={idx}
             type="button"
+            disabled={!canNavigateToStep(idx)}
             onClick={() => setActiveStep(idx)}
-            className={`flex items-center gap-2 text-sm font-semibold pb-2 border-b-2 transition-all whitespace-nowrap px-4 ${
+            className={`flex items-center gap-2 text-sm font-semibold pb-2 border-b-2 transition-all whitespace-nowrap px-4 disabled:opacity-50 disabled:cursor-not-allowed ${
               activeStep === idx
                 ? "border-primary text-primary"
                 : "border-transparent text-dark-5 hover:text-dark dark:hover:text-white"
@@ -410,92 +494,135 @@ export default function ApplicationPage() {
       </div>
 
       {/* Stepper Panels content */}
-      <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
-        <fieldset disabled={isSubmitted} className="space-y-6">
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
+          <fieldset disabled={isSubmitted} className="space-y-6">
           {/* Step 1: Personal Info */}
           {activeStep === 0 && (
             <div className="rounded-[10px] border border-stroke bg-white p-7 shadow-1 dark:border-dark-3 dark:bg-gray-dark space-y-5">
               <h2 className="text-base font-bold text-dark dark:text-white">Personal Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Full Name</label>
-                  <input
-                    {...register("fullName")}
-                    placeholder="Enter Your Full name"
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  />
-                  {errors.fullName && <p className="text-red text-xs mt-1">{errors.fullName.message}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Phone Number</label>
-                  <input
-                    {...register("phone")}
-                    placeholder="+254..."
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  />
-                  {errors.phone && <p className="text-red text-xs mt-1">{errors.phone.message}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">City</label>
-                  <input
-                    {...register("city")}
-                    placeholder="Nairobi"
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  />
-                  {errors.city && <p className="text-red text-xs mt-1">{errors.city.message}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Country</label>
-                  <select
-                    {...register("country")}
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  >
-                    <option value="Somalia">Somalia</option>
-                    <option value="Kenya">Kenya</option>
-                  </select>
-                  {errors.country && <p className="text-red text-xs mt-1">{errors.country.message}</p>}
-                </div>
-
-                <div className="col-span-1 md:col-span-2">
-                  <label className="mb-2 block text-body-sm font-medium">Date of Birth</label>
-                  <Popover.Root open={dobOpen} onOpenChange={setDobOpen}>
-                    <Popover.Trigger asChild>
-                      <button
-                        type="button"
-                        className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white flex items-center justify-between text-left cursor-pointer transition-all hover:bg-gray-300 dark:hover:bg-dark-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <span className={formValues.dateOfBirth ? "text-dark dark:text-white" : "text-dark-5"}>
-                          {formValues.dateOfBirth
-                            ? format(selectedDate || new Date(formValues.dateOfBirth), "PPP")
-                            : "Select Date of Birth"}
-                        </span>
-                        <CalendarIcon className="h-4 w-4 text-dark-5" />
-                      </button>
-                    </Popover.Trigger>
-                    <Popover.Portal>
-                      <Popover.Content
-                        className="z-[9999] rounded-xl border border-stroke bg-white p-4 shadow-lg dark:border-dark-3 dark:bg-gray-dark"
-                        align="start"
-                        sideOffset={5}
-                      >
-                        <DayPicker
-                          mode="single"
-                          captionLayout="dropdown"
-                          startMonth={new Date(1940, 0)}
-                          endMonth={new Date(new Date().getFullYear() - 18, 11)}
-                          selected={selectedDate}
-                          onSelect={handleDateSelect}
-                          className="dark:text-white"
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Your Full name"
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
                         />
-                      </Popover.Content>
-                    </Popover.Portal>
-                  </Popover.Root>
-                  <input type="hidden" {...register("dateOfBirth")} />
-                  {errors.dateOfBirth && <p className="text-red text-xs mt-1">{errors.dateOfBirth.message}</p>}
-                </div>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Phone Number</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="+254..."
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">City</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Nairobi"
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Country</FormLabel>
+                      <FormControl>
+                        <select
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        >
+                          <option value="Somalia">Somalia</option>
+                          <option value="Kenya">Kenya</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dateOfBirth"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1 md:col-span-2">
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Date of Birth</FormLabel>
+                      <FormControl>
+                        <div>
+                          <Popover.Root open={dobOpen} onOpenChange={setDobOpen}>
+                            <Popover.Trigger asChild>
+                              <button
+                                type="button"
+                                className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white flex items-center justify-between text-left cursor-pointer transition-all hover:bg-gray-300 dark:hover:bg-dark-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <span className={field.value ? "text-dark dark:text-white" : "text-dark-5"}>
+                                  {field.value
+                                    ? format(selectedDate || new Date(field.value), "PPP")
+                                    : "Select Date of Birth"}
+                                </span>
+                                <CalendarIcon className="h-4 w-4 text-dark-5" />
+                              </button>
+                            </Popover.Trigger>
+                            <Popover.Portal>
+                              <Popover.Content
+                                className="z-[9999] rounded-xl border border-stroke bg-white p-4 shadow-lg dark:border-dark-3 dark:bg-gray-dark"
+                                align="start"
+                                sideOffset={5}
+                              >
+                                <DayPicker
+                                  mode="single"
+                                  captionLayout="dropdown"
+                                  startMonth={new Date(1940, 0)}
+                                  endMonth={new Date(new Date().getFullYear() - 18, 11)}
+                                  selected={selectedDate}
+                                  onSelect={handleDateSelect}
+                                  className="dark:text-white"
+                                />
+                              </Popover.Content>
+                            </Popover.Portal>
+                          </Popover.Root>
+                          <input type="hidden" name={field.name} ref={field.ref} value={field.value} />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           )}
@@ -505,125 +632,167 @@ export default function ApplicationPage() {
             <div className="rounded-[10px] border border-stroke bg-white p-7 shadow-1 dark:border-dark-3 dark:bg-gray-dark space-y-5">
               <h2 className="text-base font-bold text-dark dark:text-white">Education & Career</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Education Level</label>
-                  <select
-                    {...register("educationLevel")}
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  >
-                    <option value="">Select Education Level</option>
-                    <option value="High School Diploma">High School Diploma</option>
-                    <option value="Associate Degree">Associate Degree</option>
-                    <option value="Bachelor's Degree">Bachelor's Degree</option>
-                    <option value="Master's Degree">Master's Degree</option>
-                    <option value="Doctorate / PhD">Doctorate / PhD</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {errors.educationLevel && <p className="text-red text-xs mt-1">{errors.educationLevel.message}</p>}
-                </div>
+                <FormField
+                  control={form.control}
+                  name="educationLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Education Level</FormLabel>
+                      <FormControl>
+                        <select
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        >
+                          <option value="">Select Education Level</option>
+                          <option value="High School Diploma">High School Diploma</option>
+                          <option value="Associate Degree">Associate Degree</option>
+                          <option value="Bachelor's Degree">Bachelor's Degree</option>
+                          <option value="Master's Degree">Master's Degree</option>
+                          <option value="Doctorate / PhD">Doctorate / PhD</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Current Occupation</label>
-                  <select
-                    {...register("occupation")}
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  >
-                    <option value="">Select Occupation</option>
-                    <option value="Student">Student</option>
-                    <option value="Designer">Designer</option>
-                    <option value="Entrepreneur">Entrepreneur</option>
-                    <option value="Model">Model</option>
-                    <option value="Artist">Artist</option>
-                    <option value="Teacher / Educator">Teacher / Educator</option>
-                    <option value="Nurse / Health Professional">Nurse / Health Professional</option>
-                    <option value="Software Developer / IT">Software Developer / IT</option>
-                    <option value="Marketing Professional">Marketing Professional</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {errors.occupation && <p className="text-red text-xs mt-1">{errors.occupation.message}</p>}
-                </div>
+                <FormField
+                  control={form.control}
+                  name="occupation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Current Occupation</FormLabel>
+                      <FormControl>
+                        <select
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        >
+                          <option value="">Select Occupation</option>
+                          <option value="Student">Student</option>
+                          <option value="Designer">Designer</option>
+                          <option value="Entrepreneur">Entrepreneur</option>
+                          <option value="Model">Model</option>
+                          <option value="Artist">Artist</option>
+                          <option value="Teacher / Educator">Teacher / Educator</option>
+                          <option value="Nurse / Health Professional">Nurse / Health Professional</option>
+                          <option value="Software Developer / IT">Software Developer / IT</option>
+                          <option value="Marketing Professional">Marketing Professional</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div className="col-span-1 md:col-span-2">
-                  <label className="mb-2 block text-body-sm font-medium">Height (cm)</label>
-                  <select
-                    {...register("height")}
-                    className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
-                  >
-                    <option value="">Select Height</option>
-                    {Array.from({ length: 51 }, (_, i) => 150 + i).map(h => (
-                      <option key={h} value={h}>{h} cm</option>
-                    ))}
-                  </select>
-                  {errors.height && <p className="text-red text-xs mt-1">{errors.height.message}</p>}
-                </div>
+                <FormField
+                  control={form.control}
+                  name="height"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1 md:col-span-2">
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Height (cm)</FormLabel>
+                      <FormControl>
+                        <select
+                          className="h-12 w-full rounded-lg border border-stroke bg-gray-2 px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        >
+                          <option value="">Select Height</option>
+                          {Array.from({ length: 51 }, (_, i) => 150 + i).map(h => (
+                            <option key={h} value={h}>{h} cm</option>
+                          ))}
+                        </select>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div className="col-span-1 md:col-span-2">
-                  <label className="mb-3 block text-body-sm font-semibold text-dark dark:text-white">Languages Spoken (Select all that apply)</label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-stroke bg-gray-2 dark:border-dark-3 dark:bg-dark-2">
-                    {["Somali", "English", "Arabic", "Kiswahili", "Italian", "French"].map(lang => {
-                      const currentLangs = (watch("languages") || "").split(", ").filter(Boolean);
-                      const isChecked = currentLangs.includes(lang);
-                      return (
-                        <label key={lang} className="flex items-center gap-2.5 text-sm font-medium cursor-pointer text-dark dark:text-white">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => {
-                              let next;
-                              if (e.target.checked) {
-                                next = [...currentLangs, lang];
-                              } else {
-                                next = currentLangs.filter(l => l !== lang);
-                              }
-                              setValue("languages", next.join(", "));
-                            }}
-                            className="h-4 w-4 rounded border-stroke text-primary focus:ring-primary dark:border-dark-3 dark:bg-dark-2"
-                          />
-                          {lang}
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="languages"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1 md:col-span-2">
+                      <FormLabel className="mb-3 block text-body-sm font-semibold text-dark dark:text-white">Languages Spoken (Select all that apply)</FormLabel>
+                      <FormControl>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-stroke bg-gray-2 dark:border-dark-3 dark:bg-dark-2">
+                          {["Somali", "English", "Arabic", "Kiswahili", "Italian", "French"].map(lang => {
+                            const currentLangs = (field.value || "").split(", ").filter(Boolean);
+                            const isChecked = currentLangs.includes(lang);
+                            return (
+                              <label key={lang} className="flex items-center gap-2.5 text-sm font-medium cursor-pointer text-dark dark:text-white">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    let next;
+                                    if (e.target.checked) {
+                                      next = [...currentLangs, lang];
+                                    } else {
+                                      next = currentLangs.filter(l => l !== lang);
+                                    }
+                                    field.onChange(next.join(", "));
+                                  }}
+                                  className="h-4 w-4 rounded border-stroke text-primary focus:ring-primary dark:border-dark-3 dark:bg-dark-2"
+                                />
+                                {lang}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div className="col-span-1 md:col-span-2">
-                  <label className="mb-3 block text-body-sm font-semibold text-dark dark:text-white">Special Skills / Talent (Select all that apply)</label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-stroke bg-gray-2 dark:border-dark-3 dark:bg-dark-2">
-                    {[
-                      "Public Speaking",
-                      "Traditional Dancing",
-                      "Poetry",
-                      "Writing",
-                      "Painting",
-                      "Singing",
-                      "Acting",
-                      "Styling",
-                      "Community Advocacy"
-                    ].map(skill => {
-                      const currentSkills = (watch("skills") || "").split(", ").filter(Boolean);
-                      const isChecked = currentSkills.includes(skill);
-                      return (
-                        <label key={skill} className="flex items-center gap-2.5 text-sm font-medium cursor-pointer text-dark dark:text-white">
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => {
-                              let next;
-                              if (e.target.checked) {
-                                next = [...currentSkills, skill];
-                              } else {
-                                next = currentSkills.filter(s => s !== skill);
-                              }
-                              setValue("skills", next.join(", "));
-                            }}
-                            className="h-4 w-4 rounded border-stroke text-primary focus:ring-primary dark:border-dark-3 dark:bg-dark-2"
-                          />
-                          {skill}
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="skills"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1 md:col-span-2">
+                      <FormLabel className="mb-3 block text-body-sm font-semibold text-dark dark:text-white">Special Skills / Talent (Select all that apply)</FormLabel>
+                      <FormControl>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-stroke bg-gray-2 dark:border-dark-3 dark:bg-dark-2">
+                          {[
+                            "Public Speaking",
+                            "Traditional Dancing",
+                            "Poetry",
+                            "Writing",
+                            "Painting",
+                            "Singing",
+                            "Acting",
+                            "Styling",
+                            "Community Advocacy"
+                          ].map(skill => {
+                            const currentSkills = (field.value || "").split(", ").filter(Boolean);
+                            const isChecked = currentSkills.includes(skill);
+                            return (
+                              <label key={skill} className="flex items-center gap-2.5 text-sm font-medium cursor-pointer text-dark dark:text-white">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    let next;
+                                    if (e.target.checked) {
+                                      next = [...currentSkills, skill];
+                                    } else {
+                                      next = currentSkills.filter(s => s !== skill);
+                                    }
+                                    field.onChange(next.join(", "));
+                                  }}
+                                  className="h-4 w-4 rounded border-stroke text-primary focus:ring-primary dark:border-dark-3 dark:bg-dark-2"
+                                />
+                                {skill}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           )}
@@ -633,36 +802,62 @@ export default function ApplicationPage() {
             <div className="rounded-[10px] border border-stroke bg-white p-7 shadow-1 dark:border-dark-3 dark:bg-gray-dark space-y-5">
               <h2 className="text-base font-bold text-dark dark:text-white">Motivation & Objectives</h2>
               <div className="space-y-4">
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Why do you want to represent Somali women in Miss Somali 2026? *</label>
-                  <textarea
-                    {...register("motivationWhy")}
-                    placeholder="State your clear platform objectives and community campaign vision..."
-                    rows={6}
-                    className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2"
-                  />
-                  {errors.motivationWhy && <p className="text-red text-xs mt-1">{errors.motivationWhy.message}</p>}
-                </div>
+                <FormField
+                  control={form.control}
+                  name="motivationWhy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Why do you want to represent Somali women in Miss Somali 2026? *</FormLabel>
+                      <FormControl>
+                        <textarea
+                          placeholder="State your clear platform objectives and community campaign vision..."
+                          rows={6}
+                          className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Tell us about your personal achievements or history</label>
-                  <textarea
-                    {...register("personalStory")}
-                    placeholder="Share any special challenges you overcame or notable project contributions..."
-                    rows={4}
-                    className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2"
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="personalStory"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Tell us about your personal achievements or history</FormLabel>
+                      <FormControl>
+                        <textarea
+                          placeholder="Share any special challenges you overcame or notable project contributions..."
+                          rows={4}
+                          className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
 
-                <div>
-                  <label className="mb-2 block text-body-sm font-medium">Short Bio Overview</label>
-                  <textarea
-                    {...register("bio")}
-                    placeholder="A concise applicant profile summary..."
-                    rows={3}
-                    className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2"
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="bio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-2 block text-body-sm font-medium text-dark dark:text-white">Short Bio Overview</FormLabel>
+                      <FormControl>
+                        <textarea
+                          placeholder="A concise applicant profile summary..."
+                          rows={3}
+                          className="w-full rounded-lg border border-stroke bg-gray-2 p-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           )}
@@ -872,8 +1067,9 @@ export default function ApplicationPage() {
           {activeStep < stepsList.length - 1 ? (
             <button
               type="button"
-              onClick={() => setActiveStep(prev => prev + 1)}
-              className="flex items-center gap-2 rounded-lg bg-primary hover:bg-opacity-90 text-white px-5 py-2.5 font-bold"
+              disabled={!isStepValid(activeStep)}
+              onClick={handleNextStep}
+              className="flex items-center gap-2 rounded-lg bg-primary hover:bg-opacity-90 text-white px-5 py-2.5 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
               <ArrowRight className="h-4 w-4" />
@@ -882,8 +1078,8 @@ export default function ApplicationPage() {
             !isSubmitted && (
               <button
                 type="submit"
-                disabled={submitting}
-                className="flex items-center gap-2 rounded-lg bg-primary hover:bg-opacity-90 text-white px-8 py-3 font-bold transition-all shadow-md"
+                disabled={submitting || !isValid || !isStepValid(3)}
+                className="flex items-center gap-2 rounded-lg bg-primary hover:bg-opacity-90 text-white px-8 py-3 font-bold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <>
@@ -899,13 +1095,13 @@ export default function ApplicationPage() {
               </button>
             )
           )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </Form>
 
       {isSubmitted && (
-        <div className="flex items-center justify-center gap-3 p-6 border border-green/20 bg-green/10 text-green rounded-xl">
-          <Lock className="h-5 w-5" />
-          <span className="text-sm font-bold">This application has been finalized and cannot be modified.</span>
+        <div className="rounded-[10px] border border-stroke bg-white p-4 text-sm text-dark-5 text-center dark:bg-gray-dark dark:border-dark-3 font-semibold flex items-center justify-center gap-2 shadow-1">
+          <span>🔒 Application Submitted (Locked)</span>
         </div>
       )}
     </div>

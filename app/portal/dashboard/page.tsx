@@ -256,15 +256,15 @@ export default function PortalDashboard() {
             <ul className="space-y-3 text-xs text-dark-5">
               <li className="flex gap-2">
                 <span className="text-primary font-bold">•</span>
-                Ensure all background data aligns with your passport identity profile.
+                Make sure your personal information matches your official identification (ID card or passport).
               </li>
               <li className="flex gap-2">
                 <span className="text-primary font-bold">•</span>
-                A full-body photo and close-up profile portrait photo are required.
+                You must upload one full-body photo and one clear face photo.
               </li>
               <li className="flex gap-2">
                 <span className="text-primary font-bold">•</span>
-                Your motivation statement should reflect your community ambitions.
+                Your motivation statement should explain your goals and how you want to support your community.
               </li>
             </ul>
           </div>

@@ -14,6 +14,12 @@ export async function GET() {
     // Lookup the user profile matching the Neon Auth unique user ID
     let profile = await prisma.userProfile.findUnique({
       where: { authUserId: session.user.id },
+      include: {
+        photos: {
+          where: { type: "profile" },
+          take: 1
+        }
+      }
     });
 
     // Auto-create a UserProfile record if it doesn't exist yet
@@ -26,6 +32,12 @@ export async function GET() {
           country: "Somalia",
           role: "contestant",
         },
+        include: {
+          photos: {
+            where: { type: "profile" },
+            take: 1
+          }
+        }
       });
     }
 
@@ -36,6 +48,7 @@ export async function GET() {
       fullName: profile.fullName,
       role: profile.role,
       profileId: profile.id,
+      profilePhotoUrl: profile.photos?.[0]?.url || "",
     });
   } catch (error) {
     console.error("Auth role endpoint error:", error);

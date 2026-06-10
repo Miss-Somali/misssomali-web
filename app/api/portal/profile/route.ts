@@ -10,7 +10,18 @@ export async function GET() {
     }
 
     const profile = await prisma.userProfile.findUnique({
-      where: { authUserId: session.user.id }
+      where: { authUserId: session.user.id },
+      include: {
+        photos: {
+          where: { type: "profile" },
+          take: 1
+        },
+        application: {
+          select: {
+            isSubmitted: true
+          }
+        }
+      }
     });
 
     if (!profile) {
@@ -21,7 +32,9 @@ export async function GET() {
       fullName: profile.fullName,
       phone: profile.phone || "",
       country: profile.country || "",
-      email: session.user.email
+      email: session.user.email,
+      profilePhotoUrl: profile.photos?.[0]?.url || "",
+      isSubmitted: profile.application?.isSubmitted || false
     });
   } catch (error) {
     console.error("Profile GET route error:", error);
@@ -79,7 +92,26 @@ export async function PUT(request: NextRequest) {
 
     const { fullName, phone, country } = await request.json();
 
-    const profile = await prisma.userProfile.update({
+    const profile = await prisma.userProfile.findUnique({
+      where: { authUserId: session.user.id },
+      include: {
+        application: {
+          select: {
+            isSubmitted: true
+          }
+        }
+      }
+    });
+
+    if (!profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    if (profile.application?.isSubmitted) {
+      return NextResponse.json({ error: "Profile is locked because application is submitted." }, { status: 400 });
+    }
+
+    const updatedProfile = await prisma.userProfile.update({
       where: { authUserId: session.user.id },
       data: {
         fullName,
@@ -88,7 +120,7 @@ export async function PUT(request: NextRequest) {
       }
     });
 
-    return NextResponse.json(profile);
+    return NextResponse.json(updatedProfile);
   } catch (error) {
     console.error("Profile PUT route error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

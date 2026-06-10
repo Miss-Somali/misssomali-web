@@ -13,6 +13,7 @@ interface UserProfileData {
   fullName: string;
   role: string;
   profileId: string;
+  profilePhotoUrl?: string;
 }
 
 interface PortalContextType {
@@ -65,9 +66,12 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   const handleSignOut = async () => {
     try {
       await authClient.signOut();
-      router.push("/login");
+      // Use hard navigation to fully clear client-side cache and cookies
+      window.location.href = "/login";
     } catch (err) {
       console.error("Sign out error:", err);
+      // Even if signOut API fails, force redirect to login
+      window.location.href = "/login";
     }
   };
 
@@ -88,9 +92,10 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
         user={{
           name: profile.fullName,
           email: profile.email,
+          image: profile.profilePhotoUrl,
         }}
         profileUrl="/portal/profile"
-        settingsUrl="/portal/pages/settings"
+        settingsUrl="/portal/settings"
         onSignOut={handleSignOut}
       >
         {children}

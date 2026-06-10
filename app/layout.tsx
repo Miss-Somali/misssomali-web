@@ -9,6 +9,11 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "@/components/providers";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 export default function RootLayout({
   children,
@@ -18,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased"
+      className={cn("h-full antialiased", "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

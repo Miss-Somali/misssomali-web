@@ -73,7 +73,7 @@ export function Sidebar({ routePrefix }: SidebarProps) {
     // Keep collapsible open, when it's subpage is active
     navData.some((section) => {
       return section.items.some((item) => {
-        return item.items.some((subItem) => {
+        return item.items.some((subItem: any) => {
           if (withPrefix(routePrefix, subItem.url) === pathname) {
             setExpandedItems((current) =>
               current.includes(item.title) ? current : [item.title],
@@ -140,13 +140,13 @@ export function Sidebar({ routePrefix }: SidebarProps) {
 
                 <nav role="navigation" aria-label={section.label}>
                   <ul className="space-y-2">
-                    {section.items.map((item) => (
+                    {section.items.map((item: any) => (
                       <li key={item.title}>
                         {item.items.length ? (
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => withPrefix(routePrefix, url) === pathname,
+                                (subItem: any) => withPrefix(routePrefix, subItem.url) === pathname,
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -172,7 +172,7 @@ export function Sidebar({ routePrefix }: SidebarProps) {
                                 className="ml-9 mr-0 space-y-1.5 pb-[15px] pr-0 pt-2"
                                 role="menu"
                               >
-                                {item.items.map((subItem) => (
+                                {item.items.map((subItem: any) => (
                                   <li key={subItem.title} role="none">
                                     <MenuItem
                                       as="link"

@@ -92,8 +92,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           name: profile.fullName,
           email: profile.email,
         }}
-        profileUrl="/admin/profile"
-        settingsUrl="/admin/pages/settings"
+        profileUrl="/admin/settings"
+        settingsUrl="/admin/settings"
         onSignOut={handleSignOut}
       >
         {children}

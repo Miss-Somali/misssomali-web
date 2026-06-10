@@ -23,21 +23,35 @@ export async function GET(request: NextRequest) {
 
     if (statusFilter && statusFilter !== "all") {
       where.status = statusFilter as Status;
+    } else {
+      where.status = { not: "draft" };
     }
+
     if (country && country !== "all") {
       where.country = country;
     }
+
     if (search) {
-      where.user = {
-        fullName: {
-          contains: search,
-          mode: "insensitive",
+      where.OR = [
+        {
+          fullName: {
+            contains: search,
+            mode: "insensitive",
+          },
         },
-      };
+        {
+          user: {
+            fullName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        },
+      ];
     }
 
-    // Fetch applications and total count
-    const [applications, total] = await prisma.$transaction([
+    // Fetch applications, total count, and distinct countries
+    const [applications, total, countriesResult] = await prisma.$transaction([
       prisma.contestantApplication.findMany({
         where,
         skip,
@@ -50,15 +64,31 @@ export async function GET(request: NextRequest) {
               fullName: true,
               phone: true,
               role: true,
+              country: true,
             },
           },
         },
       }),
       prisma.contestantApplication.count({ where }),
+      prisma.contestantApplication.findMany({
+        where: {
+          status: { not: "draft" },
+          country: { not: null },
+        },
+        distinct: ["country"],
+        select: {
+          country: true,
+        },
+      }),
     ]);
+
+    const countries = countriesResult
+      .map((c) => c.country)
+      .filter((c): c is string => Boolean(c));
 
     return NextResponse.json({
       applications,
+      countries,
       pagination: {
         total,
         page,

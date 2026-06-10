@@ -93,8 +93,8 @@ export default function Home() {
         return null;
       })
       .then((data) => {
-        if (data && data.countdownDate) {
-          setTargetDateStr(data.countdownDate);
+        if (data && data.eventDate) {
+          setTargetDateStr(data.eventDate);
         }
       })
       .catch((err) => console.error("Error fetching countdown date:", err));

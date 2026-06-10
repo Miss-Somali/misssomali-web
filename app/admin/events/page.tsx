@@ -214,12 +214,12 @@ export default function GrandFinaleSettingsPage() {
         location: form.location,
         coverImage: form.coverImage,
         eventDate: form.eventDate,
-        countdownDate: form.countdownDate || null,
+        countdownDate: form.eventDate || null,
         ticketLink: form.ticketLink || null,
         featuredContestants: form.featuredContestants,
         isGrandFinale: true,
         isPublished: form.isPublished,
-        isFeatured: form.isFeatured,
+        isFeatured: true,
       };
 
       const method = grandFinale ? "PUT" : "POST";
@@ -347,19 +347,6 @@ export default function GrandFinaleSettingsPage() {
                   required
                 />
               </div>
-
-              <div>
-                <Label htmlFor="countdownDate" className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4 text-primary" /> Countdown Target Date
-                </Label>
-                <Input
-                  type="datetime-local"
-                  id="countdownDate"
-                  value={form.countdownDate}
-                  onChange={(e) => setForm({ ...form, countdownDate: e.target.value })}
-                  required
-                />
-              </div>
             </div>
 
             {/* Visibility checkboxes */}
@@ -372,16 +359,6 @@ export default function GrandFinaleSettingsPage() {
                 />
                 <Label htmlFor="isPublished" className="cursor-pointer font-bold text-dark dark:text-white">
                   Publish to Landing Page (Public Event)
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="isFeatured"
-                  checked={form.isFeatured}
-                  onCheckedChange={(checked) => setForm({ ...form, isFeatured: !!checked })}
-                />
-                <Label htmlFor="isFeatured" className="cursor-pointer font-bold text-dark dark:text-white">
-                  Featured Coronation Event
                 </Label>
               </div>
             </div>

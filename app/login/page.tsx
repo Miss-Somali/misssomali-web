@@ -1,370 +1,297 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AlertCircle, Loader2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth/client";
-import { LogIn, Loader2, AlertCircle, ShieldCheck, RefreshCw, MailCheck } from "lucide-react";
+
+type AuthError = {
+  message?: string;
+};
+
+type OptionalPasswordResetClient = typeof authClient & {
+  forgetPassword?: (data: {
+    email: string;
+    redirectTo?: string;
+  }) => Promise<{ error?: AuthError | null }>;
+};
+
+function getAuthMessage(error: unknown, fallback: string) {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as AuthError).message;
+    if (message) return message;
+  }
+
+  return fallback;
+}
+
+function getCallbackUrl() {
+  return `${window.location.origin}/auth/callback`;
+}
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-white flex flex-col justify-center items-center">
-        <Loader2 className="animate-spin h-8 w-8 text-[#0B2D6B]" />
-      </div>
-    }>
+    <Suspense fallback={<AuthLoading />}>
       <LoginContent />
     </Suspense>
+  );
+}
+
+function AuthLoading() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-gray-2 px-4 text-dark">
+      <Loader2 className="size-8 animate-spin text-primary" />
+    </main>
   );
 }
 
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const errorParam = searchParams.get("error");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [errorMessage, setErrorMessage] = useState(
+    searchParams.get("error") ? "Please sign in to continue." : "",
+  );
 
-  // OTP Verification States
-  const [showOtpField, setShowOtpField] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [verifyingOtp, setVerifyingOtp] = useState(false);
-  const [resendingEmail, setResendingEmail] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  useEffect(() => {
+    let mounted = true;
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+    async function redirectIfSignedIn() {
+      const session = await authClient.getSession();
+
+      if (mounted && session.data?.session) {
+        router.replace("/portal");
+      }
+    }
+
+    redirectIfSignedIn();
+
+    return () => {
+      mounted = false;
+    };
+  }, [router]);
+
+  async function handleEmailSignIn(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     setLoading(true);
     setErrorMessage("");
-    setSuccessMessage("");
+    setNotice("");
 
     try {
       const { error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/portal",
+        callbackURL: getCallbackUrl(),
       });
 
       if (error) {
-        const errMsg = error.message || "";
-        const isUnverified = errMsg.toLowerCase().includes("not verified") || 
-                            errMsg.toLowerCase().includes("verification") ||
-                            errMsg.toLowerCase().includes("verify your email");
-        
-        if (isUnverified) {
-          setShowOtpField(true);
-          setErrorMessage("Your email address is not verified. Please verify using the code/link sent to you or request a new one below.");
-        } else {
-          setErrorMessage(errMsg || "Invalid email or password.");
-        }
-      } else {
-        router.push("/portal");
+        setErrorMessage(getAuthMessage(error, "Invalid email or password."));
+        return;
       }
-    } catch (err) {
-      console.error("Login page error:", err);
-      const rawMsg = err instanceof Error ? err.message : String(err);
-      const isUnverified = rawMsg.toLowerCase().includes("not verified") || 
-                          rawMsg.toLowerCase().includes("verification") ||
-                          rawMsg.toLowerCase().includes("verify your email");
-      
-      if (isUnverified) {
-        setShowOtpField(true);
-        setErrorMessage("Your email address is not verified. Please verify using the code/link sent to you or request a new one below.");
-      } else {
-        setErrorMessage(rawMsg || "An unexpected error occurred. Please try again.");
-      }
+
+      router.push("/auth/callback");
+    } catch (error) {
+      setErrorMessage(getAuthMessage(error, "Unable to sign in right now."));
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpCode.trim()) return;
-    setVerifyingOtp(true);
+  async function handleGoogleSignIn() {
+    setGoogleLoading(true);
     setErrorMessage("");
-    setSuccessMessage("");
+    setNotice("");
 
     try {
-      const { error } = await authClient.emailOtp.verifyEmail({
-        email,
-        otp: otpCode.trim(),
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: getCallbackUrl(),
+        newUserCallbackURL: getCallbackUrl(),
+        errorCallbackURL: `${window.location.origin}/login?error=google`,
       });
 
       if (error) {
-        setErrorMessage(error.message || "Invalid verification code.");
-        setVerifyingOtp(false);
-        return;
+        setErrorMessage(getAuthMessage(error, "Google sign-in failed."));
       }
-
-      setSuccessMessage("Email verified successfully! Redirecting you to the portal...");
-      
-      // Wait a short duration to ensure session cookie is registered by the browser
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      router.push("/portal");
-    } catch (err) {
-      console.error("OTP verification error:", err);
-      setErrorMessage(err instanceof Error ? err.message : "An unexpected error occurred during verification.");
+    } catch (error) {
+      setErrorMessage(getAuthMessage(error, "Google sign-in failed."));
     } finally {
-      setVerifyingOtp(false);
+      setGoogleLoading(false);
     }
-  };
+  }
 
-  const handleResendEmail = async () => {
-    setResendingEmail(true);
+  async function handleForgotPassword() {
     setErrorMessage("");
-    setSuccessMessage("");
+    setNotice("");
+
+    if (!email) {
+      setErrorMessage("Enter your email address first, then request a reset link.");
+      return;
+    }
+
+    const resetClient = authClient as OptionalPasswordResetClient;
+
+    if (!resetClient.forgetPassword) {
+      setNotice("Password reset is handled by Neon Auth. Use the reset flow configured for this project.");
+      return;
+    }
+
+    setResetLoading(true);
 
     try {
-      const { error } = await authClient.sendVerificationEmail({
+      const { error } = await resetClient.forgetPassword({
         email,
-        callbackURL: window.location.origin + "/portal",
+        redirectTo: `${window.location.origin}/login`,
       });
 
       if (error) {
-        setErrorMessage(error.message || "Failed to resend verification email.");
+        setErrorMessage(getAuthMessage(error, "Unable to send reset link."));
         return;
       }
 
-      setSuccessMessage("Verification code/link resent! Check your inbox.");
-    } catch (err) {
-      console.error("Resend error:", err);
-      setErrorMessage(err instanceof Error ? err.message : "An unexpected error occurred while resending.");
+      setNotice("If an account exists for that email, Neon Auth will send a reset link.");
+    } catch (error) {
+      setErrorMessage(getAuthMessage(error, "Unable to send reset link."));
     } finally {
-      setResendingEmail(false);
+      setResetLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B2D6B] via-[#0D3A8A] to-[#071E4A] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background spotlights/glows */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#E8C97A]/10 blur-3xl rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#0D3A8A]/35 blur-3xl rounded-full" />
-      </div>
+    <main className="flex min-h-screen items-center justify-center bg-gray-2 px-4 py-10 text-dark">
+      <section className="w-full max-w-[450px] rounded-[10px] border border-stroke bg-white p-7 shadow-1">
+        <div className="mb-8 text-center">
+          <Link
+            href="/"
+            className="mb-6 inline-flex items-center justify-center rounded-lg border border-stroke bg-gray-1 px-4 py-2 text-sm font-bold text-dark"
+          >
+            Miss Somali Platform
+          </Link>
 
-      <div className="relative z-10 mx-4 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-6 sm:px-10 shadow-2xl rounded-2xl border border-gray-100 flex flex-col">
-          {/* Logo & Header block */}
-          <div className="flex flex-col items-center mb-8">
-            <Link href="/">
-              <div className="relative w-48 h-12 mb-4 cursor-pointer">
-                <Image
-                  src="/logo.png"
-                  alt="Miss Somali Logo"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  priority
-                />
-              </div>
-            </Link>
-            <h2 className="text-center text-2xl font-extrabold text-[#071E4A] tracking-tight">
-              Welcome back
-            </h2>
-            <p className="mt-1 text-center text-sm text-[#071E4A]/70">
-              Sign in to continue to your account
-            </p>
+          <h1 className="text-heading-6 font-bold text-dark">Sign in</h1>
+          <p className="mt-2 text-body-sm font-medium text-dark-5">
+            Access your dashboard workspace.
+          </p>
+        </div>
+
+        {errorMessage && (
+          <div className="mb-5 flex gap-3 rounded-lg border border-red-light-4 bg-red-light-6 px-4 py-3 text-body-sm font-medium text-red">
+            <AlertCircle className="mt-0.5 size-4 shrink-0" />
+            <p>{errorMessage}</p>
+          </div>
+        )}
+
+        {notice && (
+          <div className="mb-5 rounded-lg border border-stroke bg-gray-1 px-4 py-3 text-body-sm font-medium text-dark-5">
+            {notice}
+          </div>
+        )}
+
+        <Button
+          type="button"
+          variant="outline"
+          className="mb-5 h-12 w-full rounded-lg border-stroke bg-white text-dark hover:bg-gray-1"
+          disabled={googleLoading || loading}
+          onClick={handleGoogleSignIn}
+        >
+          {googleLoading ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
+              alt=""
+              className="size-5"
+            />
+          )}
+          Continue with Google
+        </Button>
+
+        <div className="mb-5 flex items-center gap-4">
+          <Separator className="flex-1 bg-stroke" />
+          <span className="text-body-xs font-medium uppercase text-dark-5">
+            or
+          </span>
+          <Separator className="flex-1 bg-stroke" />
+        </div>
+
+        <form onSubmit={handleEmailSignIn} className="space-y-5">
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2.5 block text-body-sm font-medium text-dark"
+            >
+              Email address
+            </label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              className="h-12 rounded-lg border-stroke bg-gray-1 px-4 text-dark shadow-none focus-visible:border-primary focus-visible:ring-primary/20"
+            />
           </div>
 
-          {errorParam === "noprofile" && (
-            <div className="mb-6 bg-amber-50 border-l-4 border-[#E8C97A] p-4 rounded-md">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <AlertCircle className="h-5 w-5 text-[#E8C97A]" aria-hidden="true" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs font-semibold text-[#071E4A]">
-                    Your account does not have a contestant profile setup. Please register again or contact support.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {errorMessage && (
-            <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <AlertCircle className="h-5 w-5 text-red-500" aria-hidden="true" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs font-semibold text-red-800">{errorMessage}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-md">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <MailCheck className="h-5 w-5 text-green-500" aria-hidden="true" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-xs font-semibold text-green-800">{successMessage}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {showOtpField ? (
-            /* OTP Verification Screen */
-            <div>
-              <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div>
-                  <label htmlFor="otpCode" className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">
-                    Verification Code
-                  </label>
-                  <p className="text-xs text-[#071E4A]/60 mb-2">
-                    Enter the 6-digit code sent to <span className="font-semibold text-[#071E4A]">{email}</span>:
-                  </p>
-                  <div className="mt-1">
-                    <input
-                      id="otpCode"
-                      name="otpCode"
-                      type="text"
-                      required
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      className="appearance-none block w-full px-4 py-3 border border-[#E8E8E8] rounded-lg shadow-sm placeholder-[#071E4A]/30 focus:outline-none focus:ring-2 focus:ring-[#E8C97A] focus:border-[#E8C97A] text-center tracking-widest font-mono text-xl text-[#071E4A]"
-                      placeholder="123456"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <button
-                    type="submit"
-                    disabled={verifyingOtp}
-                    className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#F0D898] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B2D6B] disabled:opacity-50"
-                  >
-                    {verifyingOtp ? (
-                      <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                    ) : (
-                      <ShieldCheck className="h-5 w-5 mr-2" />
-                    )}
-                    Verify Account
-                  </button>
-                </div>
-              </form>
-
-              <div className="mt-6 border-t border-[#E8E8E8] pt-6 flex flex-col space-y-3">
-                <button
-                  type="button"
-                  onClick={handleResendEmail}
-                  disabled={resendingEmail}
-                  className="w-full flex justify-center items-center py-3 px-4 border border-[#0B2D6B]/20 rounded-full shadow-sm text-sm font-semibold text-[#0B2D6B] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B2D6B] disabled:opacity-50"
-                >
-                  {resendingEmail ? (
-                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  ) : (
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                  )}
-                  Resend Verification Email
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowOtpField(false);
-                    setErrorMessage("");
-                    setSuccessMessage("");
-                  }}
-                  className="w-full text-center text-sm font-bold text-[#071E4A] hover:text-[#0B2D6B] transition-colors py-2"
-                >
-                  Back to Sign In
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* Standard Login Form */
-            <form className="space-y-5" onSubmit={handleLogin}>
-              <div>
-                <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">
-                  Email Address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-4 py-3 border border-[#E8E8E8] rounded-lg shadow-sm placeholder-[#071E4A]/30 focus:outline-none focus:ring-2 focus:ring-[#E8C97A] focus:border-[#E8C97A] sm:text-sm text-[#071E4A]"
-                    placeholder="you@example.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-[#071E4A]">
-                    Password
-                  </label>
-                </div>
-                <div className="mt-1 relative">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="appearance-none block w-full px-4 py-3 border border-[#E8E8E8] rounded-lg shadow-sm placeholder-[#071E4A]/30 focus:outline-none focus:ring-2 focus:ring-[#E8C97A] focus:border-[#E8C97A] sm:text-sm text-[#071E4A]"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <div className="flex justify-end mt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSuccessMessage("");
-                      setErrorMessage("Password reset is managed by the administrator. Please contact info@misssomali.org.");
-                    }}
-                    className="text-xs font-bold text-[#0B2D6B] hover:text-[#0B2D6B]/80 hover:underline transition-colors"
-                  >
-                    Forgot your password?
-                  </button>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-full shadow-sm text-sm font-bold text-[#071E4A] bg-[#E8C97A] hover:bg-[#071E4A] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0B2D6B] disabled:opacity-50 cursor-pointer"
-                >
-                  {loading ? (
-                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  ) : (
-                    <LogIn className="h-5 w-5 mr-2" />
-                  )}
-                  Sign in
-                </button>
-              </div>
-            </form>
-          )}
-
-          {!showOtpField && (
-            <div className="mt-8 pt-6 border-t border-[#E8E8E8] text-center text-sm text-[#071E4A]/70 font-normal">
-              <span>New here? </span>
-              <Link
-                href="/register"
-                className="font-bold text-[#0B2D6B] hover:text-[#0B2D6B]/80 hover:underline transition-colors"
+          <div>
+            <div className="mb-2.5 flex items-center justify-between gap-4">
+              <label
+                htmlFor="password"
+                className="block text-body-sm font-medium text-dark"
               >
-                Create an account
-              </Link>
+                Password
+              </label>
+              <button
+                type="button"
+                className="text-body-sm font-medium text-primary hover:underline"
+                disabled={resetLoading}
+                onClick={handleForgotPassword}
+              >
+                {resetLoading ? "Sending..." : "Forgot password?"}
+              </button>
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter your password"
+              className="h-12 rounded-lg border-stroke bg-gray-1 px-4 text-dark shadow-none focus-visible:border-primary focus-visible:ring-primary/20"
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-lg bg-primary text-white hover:bg-blue-dark"
+            disabled={loading || googleLoading}
+          >
+            {loading && <Loader2 className="size-4 animate-spin" />}
+            Sign in
+          </Button>
+        </form>
+
+        <p className="mt-6 text-center text-body-sm font-medium text-dark-5">
+          New to the platform?{" "}
+          <Link href="/register" className="text-primary hover:underline">
+            Create an account
+          </Link>
+        </p>
+      </section>
+    </main>
   );
 }

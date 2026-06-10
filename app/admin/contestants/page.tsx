@@ -1,5 +1,5 @@
-import { TemplatePlaceholderPage } from "@/components/template-placeholder-page";
+import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
 
-export default function AdminContestantsPage() {
-  return <TemplatePlaceholderPage title="Analytics" />;
+export default function Page() {
+  return <PlaceholderPage pageName="Contestants" />;
 }

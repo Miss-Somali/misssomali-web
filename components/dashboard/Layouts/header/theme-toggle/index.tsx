@@ -1,8 +1,5 @@
-"use client";
-
-import { cn } from "../../../utils";
+import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "./icons";
 
 const THEMES = [
@@ -18,16 +15,6 @@ const THEMES = [
 
 export function ThemeToggleSwitch() {
   const { setTheme, theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setMounted(true), 0);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <button

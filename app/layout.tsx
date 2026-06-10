@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +22,19 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+        <Providers>
+          <NextTopLoader color="#5750F1" showSpinner={false} />
+          {children}
+          <Toaster
+            position="bottom-right"
+            richColors
+            closeButton
+            duration={5000}
+            toastOptions={{
+              className: "dark:bg-gray-dark dark:border-dark-3 dark:text-white",
+            }}
+          />
+        </Providers>
       </body>
     </html>
   );

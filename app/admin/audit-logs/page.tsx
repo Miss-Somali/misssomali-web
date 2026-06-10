@@ -1,5 +1,5 @@
-import { TemplatePlaceholderPage } from "@/components/template-placeholder-page";
+import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
 
-export default function AdminAuditLogsPage() {
-  return <TemplatePlaceholderPage title="Reports" />;
+export default function Page() {
+  return <PlaceholderPage pageName="Audit Logs" />;
 }

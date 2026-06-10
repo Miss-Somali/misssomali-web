@@ -1,23 +1,20 @@
 "use client";
 
-import { SearchIcon } from "../../icons";
+import { SearchIcon } from "@/components/dashboard/assets/icons";
+import Image from "next/image";
+import Link from "next/link";
 import { useSidebarContext } from "../sidebar/sidebar-context";
 import { MenuIcon } from "./icons";
 import { Notification } from "./notification";
 import { ThemeToggleSwitch } from "./theme-toggle";
 import { UserInfo } from "./user-info";
-import Link from "next/link";
-import Image from "next/image";
 
 type HeaderProps = {
   user: {
     name: string;
     email: string;
     image?: string;
-    role?: string;
   };
-  title: string;
-  subtitle: string;
   onSignOut: () => void;
   profileUrl: string;
   settingsUrl: string;
@@ -25,8 +22,6 @@ type HeaderProps = {
 
 export function Header({
   user,
-  title,
-  subtitle,
   onSignOut,
   profileUrl,
   settingsUrl,
@@ -44,24 +39,22 @@ export function Header({
       </button>
 
       {isMobile && (
-        <Link href="/" className="2xsm:ml-4 ml-2 max-[430px]:hidden">
-            <div className="relative w-28 h-8">
-              <Image
-                src="/logo.png"
-                fill
-                style={{ objectFit: "contain" }}
-                alt="Miss Somali"
-                className="dark:invert"
-              />
-            </div>
+        <Link href={"/"} className="2xsm:ml-4 ml-2 max-[430px]:hidden">
+          <Image
+            src={"/images/logo/logo-icon.svg"}
+            width={32}
+            height={32}
+            alt=""
+            role="presentation"
+          />
         </Link>
       )}
 
       <div className="max-xl:hidden">
         <h1 className="text-heading-5 text-dark mb-0.5 font-bold dark:text-white">
-          {title}
+          Dashboard
         </h1>
-        <p className="font-medium">{subtitle}</p>
+        <p className="font-medium">Next.js Admin Dashboard Solution</p>
       </div>
 
       <div className="2xsm:gap-4 flex flex-1 items-center justify-end gap-2">

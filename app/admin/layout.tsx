@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, createContext, useContext } from "rea
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/client";
 import { Loader2 } from "lucide-react";
-import { DashboardShell } from "@/components/dashboard-shell";
+import { DashboardShell } from "@/components/dashboard/Layouts/DashboardShell";
 
 interface UserProfileData {
   authenticated: boolean;
@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-gray-2 flex flex-col justify-center items-center dark:bg-[#020d1a]">
         <Loader2 className="animate-spin h-10 w-10 text-primary mb-4" />
         <p className="text-sm font-semibold text-dark-5">Loading Admin Control Panel...</p>
       </div>
@@ -85,11 +85,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AdminContext.Provider value={{ profile, refreshProfile: fetchProfile, loading }}>
       <DashboardShell
-        section="admin"
+        routePrefix="/admin"
         user={{
           name: profile.fullName,
           email: profile.email,
         }}
+        profileUrl="/admin/profile"
+        settingsUrl="/admin/pages/settings"
         onSignOut={handleSignOut}
       >
         {children}

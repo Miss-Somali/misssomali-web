@@ -4,41 +4,39 @@ import {
   Dropdown,
   DropdownContent,
   DropdownTrigger,
-} from "../../../ui/dropdown";
-import { useIsMobile } from "../../../hooks/use-mobile";
-import { cn } from "../../../utils";
+} from "@/components/dashboard/ui/dropdown";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { BellIcon } from "./icons";
 
 const notificationList = [
   {
-    initials: "PJ",
-    bg: "bg-blue-100 text-blue-800",
+    image: "/images/user/user-15.png",
     title: "Piter Joined the Team!",
     subTitle: "Congratulate him",
-    time: "2 mins ago"
   },
   {
-    initials: "DS",
-    bg: "bg-green-100 text-green-800",
-    title: "New application received",
-    subTitle: "Devid sent application draft",
-    time: "1 hour ago"
+    image: "/images/user/user-03.png",
+    title: "New message",
+    subTitle: "Devid sent a new message",
   },
   {
-    initials: "PR",
-    bg: "bg-amber-100 text-amber-800",
-    title: "Document approved",
-    subTitle: "Verification complete for Huda",
-    time: "3 hours ago"
+    image: "/images/user/user-26.png",
+    title: "New Payment received",
+    subTitle: "Check your earnings",
   },
   {
-    initials: "JC",
-    bg: "bg-purple-100 text-purple-800",
-    title: "New feedback posted",
-    subTitle: "Admin added review comments",
-    time: "1 day ago"
+    image: "/images/user/user-28.png",
+    title: "Jolly completed tasks",
+    subTitle: "Assign new task",
+  },
+  {
+    image: "/images/user/user-27.png",
+    title: "Roman Joined the Team!",
+    subTitle: "Congratulate him",
   },
 ];
 
@@ -52,6 +50,7 @@ export function Notification() {
       isOpen={isOpen}
       setIsOpen={(open) => {
         setIsOpen(open);
+
         if (setIsDotVisible) setIsDotVisible(false);
       }}
     >
@@ -60,15 +59,15 @@ export function Notification() {
         aria-label="View Notifications"
       >
         <span className="relative">
-          <BellIcon className="size-5" />
+          <BellIcon />
 
           {isDotVisible && (
             <span
               className={cn(
-                "absolute top-0 right-0 z-1 size-2 rounded-full bg-red ring-2 ring-gray-2 dark:ring-dark-3",
+                "absolute top-0 right-0 z-1 size-2 rounded-full bg-red-light ring-2 ring-gray-2 dark:ring-dark-3",
               )}
             >
-              <span className="absolute inset-0 -z-1 animate-ping rounded-full bg-red opacity-75" />
+              <span className="absolute inset-0 -z-1 animate-ping rounded-full bg-red-light opacity-75" />
             </span>
           )}
         </span>
@@ -76,39 +75,40 @@ export function Notification() {
 
       <DropdownContent
         align={isMobile ? "end" : "center"}
-        className="border border-stroke bg-white px-3.5 py-3 shadow-xl min-[350px]:min-w-[20rem] dark:border-dark-3 dark:bg-gray-dark rounded-xl"
+        className="border border-stroke bg-white px-3.5 py-3 shadow-md min-[350px]:min-w-[20rem] dark:border-dark-3 dark:bg-gray-dark"
       >
-        <div className="mb-2 flex items-center justify-between px-2 py-1.5 border-b border-gray-100 dark:border-dark-3">
-          <span className="text-sm font-bold text-dark dark:text-white">
+        <div className="mb-1 flex items-center justify-between px-2 py-1.5">
+          <span className="text-lg font-medium text-dark dark:text-white">
             Notifications
           </span>
-          <span className="rounded-md bg-primary px-2.25 py-0.5 text-[10px] font-bold text-white">
-            4 new
+          <span className="rounded-md bg-primary px-2.25 py-0.5 text-xs font-medium text-white">
+            5 new
           </span>
         </div>
 
-        <ul className="mb-3 max-h-80 space-y-1.5 overflow-y-auto custom-scrollbar">
+        <ul className="mb-3 max-h-92 space-y-1.5 overflow-y-auto">
           {notificationList.map((item, index) => (
             <li key={index} role="menuitem">
               <Link
                 href="#"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-4 rounded-lg px-2 py-2 outline-none hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-dark-3 dark:focus-visible:bg-dark-3"
+                className="flex items-center gap-4 rounded-lg px-2 py-1.5 outline-none hover:bg-gray-2 focus-visible:bg-gray-2 dark:hover:bg-dark-3 dark:focus-visible:bg-dark-3"
               >
-                <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-bold", item.bg)}>
-                  {item.initials}
-                </span>
+                <Image
+                  src={item.image}
+                  className="size-14 rounded-full object-cover"
+                  width={200}
+                  height={200}
+                  alt="User"
+                />
 
-                <div className="flex-1 min-w-0">
-                  <strong className="block text-xs font-bold text-dark dark:text-white truncate">
+                <div>
+                  <strong className="block text-sm font-medium text-dark dark:text-white">
                     {item.title}
                   </strong>
 
-                  <span className="block truncate text-xs text-gray-500 dark:text-dark-6">
+                  <span className="truncate text-sm font-medium text-dark-5 dark:text-dark-6">
                     {item.subTitle}
-                  </span>
-                  <span className="block text-[10px] text-gray-400 mt-0.5">
-                    {item.time}
                   </span>
                 </div>
               </Link>
@@ -119,7 +119,7 @@ export function Notification() {
         <Link
           href="#"
           onClick={() => setIsOpen(false)}
-          className="block rounded-lg border border-primary p-2 text-center text-xs font-semibold text-primary hover:bg-gray-50 transition-colors dark:border-dark-3 dark:text-dark-6 dark:hover:bg-dark-3"
+          className="block rounded-lg border border-primary p-2 text-center text-sm font-medium tracking-wide text-primary transition-colors outline-none hover:bg-blue-light-5 focus:bg-blue-light-5 focus:text-primary focus-visible:border-primary dark:border-dark-3 dark:text-dark-6 dark:hover:border-dark-5 dark:hover:bg-dark-3 dark:hover:text-dark-7 dark:focus-visible:border-dark-5 dark:focus-visible:bg-dark-3 dark:focus-visible:text-dark-7"
         >
           See all notifications
         </Link>

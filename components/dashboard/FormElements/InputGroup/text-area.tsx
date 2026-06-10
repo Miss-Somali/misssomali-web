@@ -1,4 +1,4 @@
-import { cn } from "../../utils";
+import { cn } from "@/lib/utils";
 import { useId } from "react";
 
 interface PropsType extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -25,7 +25,10 @@ export function TextAreaGroup({
 
   return (
     <div className={cn(className)}>
-      <label htmlFor={id} className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
+      <label
+        htmlFor={id}
+        className="mb-3 block text-body-sm font-medium text-dark dark:text-white"
+      >
         {label}
       </label>
 

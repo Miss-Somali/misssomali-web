@@ -1,5 +1,5 @@
-import { TemplatePlaceholderPage } from "@/components/template-placeholder-page";
+import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
 
-export default function AdminApplicationDetailPage() {
-  return <TemplatePlaceholderPage title="Lifecycle Detail" />;
+export default function Page() {
+  return <PlaceholderPage pageName="Application Details" />;
 }

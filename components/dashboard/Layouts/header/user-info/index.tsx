@@ -1,12 +1,12 @@
 "use client";
 
-import { ChevronUpIcon } from "../../../icons";
+import { ChevronUpIcon } from "@/components/dashboard/assets/icons";
 import {
   Dropdown,
   DropdownContent,
   DropdownTrigger,
-} from "../../../ui/dropdown";
-import { cn } from "../../../utils";
+} from "@/components/dashboard/ui/dropdown";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,14 +17,18 @@ type UserInfoProps = {
     name: string;
     email: string;
     image?: string;
-    role?: string;
   };
   onSignOut: () => void;
   profileUrl: string;
   settingsUrl: string;
 };
 
-export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoProps) {
+export function UserInfo({
+  user,
+  onSignOut,
+  profileUrl,
+  settingsUrl,
+}: UserInfoProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -33,25 +37,25 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
-          {user?.image ? (
+          {user.image ? (
             <Image
               src={user.image}
-              className="size-10 overflow-hidden rounded-full object-cover"
+              className="size-12 overflow-hidden rounded-full object-cover"
               alt={`Avatar of ${user.name}`}
               role="presentation"
               width={200}
               height={200}
             />
           ) : (
-            <UserAvatar name={user.name} />
+            <UserAvatar />
           )}
-          <figcaption className="flex items-center gap-1 font-semibold text-dark max-[1024px]:sr-only dark:text-dark-6 text-sm">
+          <figcaption className="flex items-center gap-1 font-medium text-dark max-[1024px]:sr-only dark:text-dark-6">
             <span className="max-w-24 truncate">{user.name}</span>
 
             <ChevronUpIcon
               aria-hidden
               className={cn(
-                "size-4 rotate-180 transition-transform text-gray-500",
+                "rotate-180 transition-transform",
                 isOpen && "rotate-0",
               )}
               strokeWidth={1.5}
@@ -61,13 +65,13 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
       </DropdownTrigger>
 
       <DropdownContent
-        className="border border-stroke bg-white shadow-xl min-[230px]:min-w-64 dark:border-dark-3 dark:bg-gray-dark rounded-xl"
+        className="border border-stroke bg-white shadow-md min-[230px]:min-w-70 dark:border-dark-3 dark:bg-gray-dark"
         align="end"
       >
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          {user?.image ? (
+          {user.image ? (
             <Image
               src={user.image}
               className="size-12 shrink-0 overflow-hidden rounded-full object-cover object-center"
@@ -77,64 +81,59 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
               height={48}
             />
           ) : (
-            <UserAvatar name={user.name} />
+            <UserAvatar />
           )}
 
-          <figcaption className="space-y-1 text-sm font-semibold">
-            <div className="mb-1 leading-none text-dark dark:text-white flex items-center gap-1.5">
-              <span>{user.name}</span>
-              {user.role === "admin" && (
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-                  Admin
-                </span>
-              )}
+          <figcaption className="space-y-1 text-base font-medium">
+            <div className="mb-2 leading-none text-dark dark:text-white">
+              {user.name}
             </div>
 
-            <div className="w-full max-w-47.5 truncate leading-none text-gray-500 text-xs font-normal">
+            <div className="w-full max-w-47.5 truncate leading-none text-gray-6">
               {user.email}
             </div>
           </figcaption>
         </figure>
 
-        <hr className="border-gray-100 dark:border-dark-3" />
+        <hr className="border-[#E8E8E8] dark:border-dark-3" />
 
-        <div className="p-2 text-sm text-[#4B5563] *:cursor-pointer dark:text-dark-6">
+        <div className="p-2 text-base text-[#4B5563] *:cursor-pointer dark:text-dark-6">
           <Link
             href={profileUrl}
             onClick={() => setIsOpen(false)}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-primary outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.25 ring-primary outline-0 hover:bg-gray-2 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white"
           >
-            <UserIcon className="size-4" />
+            <UserIcon />
 
-            <span className="mr-auto text-xs font-semibold">View profile</span>
+            <span className="mr-auto text-base font-medium">View profile</span>
           </Link>
 
           <Link
             href={settingsUrl}
             onClick={() => setIsOpen(false)}
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 ring-primary outline-0 hover:bg-gray-50 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white font-medium"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.25 ring-primary outline-0 hover:bg-gray-2 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white"
           >
-            <SettingsIcon className="size-4" />
+            <SettingsIcon />
 
-            <span className="mr-auto text-xs font-semibold">
+            <span className="mr-auto text-base font-medium">
               Account Settings
             </span>
           </Link>
         </div>
 
-        <hr className="border-gray-100 dark:border-dark-3" />
+        <hr className="border-[#E8E8E8] dark:border-dark-3" />
 
-        <div className="p-2 text-sm text-[#4B5563] dark:text-dark-6">
+        <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
-            className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 ring-red-500 outline-0 hover:bg-red-50 hover:text-red-700 focus-visible:ring-1 dark:hover:bg-red-950/20 dark:hover:text-red-400"
+            className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2.25 ring-primary outline-0 hover:bg-gray-2 hover:text-dark focus-visible:ring-1 dark:hover:bg-dark-3 dark:hover:text-white"
             onClick={() => {
               setIsOpen(false);
               onSignOut();
             }}
           >
-            <LogOutIcon className="size-4 text-red-500" />
+            <LogOutIcon />
 
-            <span className="text-xs font-semibold">Log out</span>
+            <span className="text-base font-medium">Log out</span>
           </button>
         </div>
       </DropdownContent>
@@ -142,11 +141,10 @@ export function UserInfo({ user, onSignOut, profileUrl, settingsUrl }: UserInfoP
   );
 }
 
-function UserAvatar({ name }: { name: string }) {
-  const initial = name ? name.charAt(0).toUpperCase() : "U";
+function UserAvatar() {
   return (
-    <span className="flex size-10 items-center justify-center rounded-full border border-gray-100 bg-primary/5 text-primary font-bold text-xs outline-none dark:border-dark-4 dark:bg-dark-2 dark:text-white">
-      {initial}
+    <span className="flex size-12 items-center justify-center rounded-full border bg-gray-2 text-dark outline-none dark:border-dark-4 dark:bg-dark-2 dark:text-white">
+      <UserIcon />
     </span>
   );
 }

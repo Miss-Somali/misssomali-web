@@ -4,23 +4,14 @@ import { Header } from "./header";
 import { Sidebar } from "./sidebar";
 import { SidebarProvider } from "./sidebar/sidebar-context";
 
-export type DashboardNavItem = {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-};
-
 type DashboardShellProps = {
   children: React.ReactNode;
-  navigation: DashboardNavItem[];
+  routePrefix: "/admin" | "/portal";
   user: {
     name: string;
     email: string;
     image?: string;
-    role?: string;
   };
-  title: string;
-  subtitle: string;
   profileUrl: string;
   settingsUrl: string;
   onSignOut: () => void;
@@ -28,10 +19,8 @@ type DashboardShellProps = {
 
 export function DashboardShell({
   children,
-  navigation,
+  routePrefix,
   user,
-  title,
-  subtitle,
   profileUrl,
   settingsUrl,
   onSignOut,
@@ -39,13 +28,11 @@ export function DashboardShell({
   return (
     <SidebarProvider>
       <div className="flex min-h-screen">
-        <Sidebar navigation={navigation} />
+        <Sidebar routePrefix={routePrefix} />
 
         <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
           <Header
             user={user}
-            title={title}
-            subtitle={subtitle}
             onSignOut={onSignOut}
             profileUrl={profileUrl}
             settingsUrl={settingsUrl}

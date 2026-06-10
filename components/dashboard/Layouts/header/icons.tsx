@@ -1,6 +1,6 @@
-import type { SVGProps } from "react";
+import type { IconProps } from "@/types/icon-props";
 
-export function MenuIcon(props: SVGProps<SVGSVGElement>) {
+export function MenuIcon(props: IconProps) {
   return (
     <svg
       width="25"

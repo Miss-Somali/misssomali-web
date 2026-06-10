@@ -1,6 +1,6 @@
 "use client";
 
-import { useIsMobile } from "../../hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type SidebarState = "expanded" | "collapsed";
@@ -34,11 +34,9 @@ export function SidebarProvider({
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
+    queueMicrotask(() => {
       setIsOpen(!isMobile);
-    }, 0);
-
-    return () => window.clearTimeout(timer);
+    });
   }, [isMobile]);
 
   function toggleSidebar() {

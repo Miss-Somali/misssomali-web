@@ -182,16 +182,14 @@ export default function ApplicationsPage() {
     setPage(1);
   };
 
-  const handleDownload = async (scope: "all" | "filtered") => {
+  const handleDownload = async () => {
     setDownloading(true);
     const toastId = toast.loading("Generating applications PDF report...");
     try {
       const params = new URLSearchParams();
-      if (scope === "filtered") {
-        if (statusFilter && statusFilter !== "all") params.set("status", statusFilter);
-        if (countryFilter && countryFilter !== "all") params.set("country", countryFilter);
-        if (searchQuery) params.set("search", searchQuery);
-      }
+      if (statusFilter && statusFilter !== "all") params.set("status", statusFilter);
+      if (countryFilter && countryFilter !== "all") params.set("country", countryFilter);
+      if (searchQuery) params.set("search", searchQuery);
       
       const res = await fetch(`/api/admin/download-applications-pdf?${params.toString()}`);
       if (!res.ok) {
@@ -203,7 +201,7 @@ export default function ApplicationsPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `applications-${scope}-${new Date().toISOString().split("T")[0]}.pdf`;
+      a.download = `applications-${new Date().toISOString().split("T")[0]}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -230,31 +228,23 @@ export default function ApplicationsPage() {
 
         {/* Action Button */}
         <div className="flex items-center gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button disabled={downloading} className="bg-primary text-white hover:bg-primary/90">
-                {downloading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Preparing download...
-                  </>
-                ) : (
-                  <>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download PDF
-                  </>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleDownload("all")}>
-                Download all applications (PDF)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDownload("filtered")}>
-                Download filtered applications (PDF)
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="bg-primary text-white hover:bg-primary/90"
+          >
+            {downloading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Preparing download...
+              </>
+            ) : (
+              <>
+                <Download className="mr-2 h-4 w-4" />
+                Download PDF
+              </>
+            )}
+          </Button>
         </div>
       </div>
 

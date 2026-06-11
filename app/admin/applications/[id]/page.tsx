@@ -24,8 +24,6 @@ import {
 import {
   IconBrandInstagram,
   IconBrandTiktok,
-  IconBrandFacebook,
-  IconBrandYoutube,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -350,15 +348,15 @@ export default function ApplicationDetailPage({ params }: PageProps) {
                   <p className="text-xs text-dark-6">Instagram</p>
                   {application.instagram ? (
                     <a
-                      href={application.instagram.startsWith("http") ? application.instagram : `https://instagram.com/${application.instagram.replace(/^@/, "")}`}
+                      href={`https://instagram.com/${application.instagram.replace(/^@/, "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-semibold text-primary hover:underline"
                     >
-                      {application.instagram}
+                      {application.instagram.startsWith("@") ? application.instagram : `@${application.instagram}`}
                     </a>
                   ) : (
-                    <p className="text-sm font-medium text-destructive">Missing</p>
+                    <p className="text-sm font-medium text-dark-6">—</p>
                   )}
                 </div>
               </div>
@@ -369,50 +367,12 @@ export default function ApplicationDetailPage({ params }: PageProps) {
                   <p className="text-xs text-dark-6">TikTok</p>
                   {application.tiktok ? (
                     <a
-                      href={application.tiktok.startsWith("http") ? application.tiktok : `https://tiktok.com/@${application.tiktok.replace(/^@/, "")}`}
+                      href={`https://tiktok.com/@${application.tiktok.replace(/^@/, "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-semibold text-primary hover:underline"
                     >
-                      {application.tiktok}
-                    </a>
-                  ) : (
-                    <p className="text-sm font-medium text-destructive">Missing</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <IconBrandFacebook className="mt-0.5 h-5 w-5 text-blue-600 dark:text-blue-400" />
-                <div>
-                  <p className="text-xs text-dark-6">Facebook</p>
-                  {application.facebook ? (
-                    <a
-                      href={application.facebook.startsWith("http") ? application.facebook : `https://facebook.com/${application.facebook.replace(/^@/, "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-semibold text-primary hover:underline"
-                    >
-                      {application.facebook}
-                    </a>
-                  ) : (
-                    <p className="text-sm font-medium text-dark-6">—</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <IconBrandYoutube className="mt-0.5 h-5 w-5 text-red-600 dark:text-red-400" />
-                <div>
-                  <p className="text-xs text-dark-6">YouTube</p>
-                  {application.youtube ? (
-                    <a
-                      href={application.youtube.startsWith("http") ? application.youtube : `https://youtube.com/${application.youtube.startsWith("@") ? application.youtube : `user/${application.youtube}`}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-semibold text-primary hover:underline"
-                    >
-                      {application.youtube}
+                      {application.tiktok.startsWith("@") ? application.tiktok : `@${application.tiktok}`}
                     </a>
                   ) : (
                     <p className="text-sm font-medium text-dark-6">—</p>

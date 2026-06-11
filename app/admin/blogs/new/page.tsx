@@ -15,8 +15,8 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { RichTextEditor } from "@/components/rich-text-editor";
 import { Progress } from "@/components/ui/progress";
 
 export default function NewBlogPage() {
@@ -26,29 +26,11 @@ export default function NewBlogPage() {
 
   const [form, setForm] = useState({
     title: "",
-    slug: "",
-    excerpt: "",
     content: "",
     coverImage: "",
     author: "Miss Somali Team",
     status: "draft",
   });
-
-  // Handle Title input change to auto-fill Slug
-  const handleTitleChange = (title: string) => {
-    const generatedSlug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    setForm((prev) => ({
-      ...prev,
-      title,
-      // Only auto-generate slug if the user hasn't modified it manually or it's empty
-      slug: prev.slug === "" || prev.slug === prev.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-        ? generatedSlug
-        : prev.slug,
-    }));
-  };
 
   // Read file as base64 utility
   function readFileAsDataURL(file: File): Promise<string> {
@@ -215,54 +197,23 @@ export default function NewBlogPage() {
               Article Content
             </h3>
             
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="blogTitle">Article Title</Label>
-                <Input
-                  id="blogTitle"
-                  value={form.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="e.g. Official Grand Finale Date Announced"
-                  required
-                  className="h-11 rounded-xl"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="blogSlug">Slug (URL Path)</Label>
-                <Input
-                  id="blogSlug"
-                  value={form.slug}
-                  onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                  placeholder="e.g. official-grand-finale-date"
-                  required
-                  className="h-11 rounded-xl font-mono text-xs"
-                />
-              </div>
-            </div>
-
             <div className="space-y-1.5">
-              <Label htmlFor="blogExcerpt">Short Excerpt / Teaser</Label>
-              <Textarea
-                id="blogExcerpt"
-                value={form.excerpt}
-                onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
-                placeholder="Write a brief excerpt teaser paragraph to display on listings..."
-                rows={3}
-                className="rounded-xl resize-none"
+              <Label htmlFor="blogTitle">Article Title</Label>
+              <Input
+                id="blogTitle"
+                value={form.title}
+                onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
+                placeholder="e.g. Official Grand Finale Date Announced"
+                required
+                className="h-11 rounded-xl"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="blogContent">Content Body</Label>
-              <Textarea
-                id="blogContent"
+              <RichTextEditor
                 value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
-                placeholder="Write the full news article text body here..."
-                rows={12}
-                required
-                className="rounded-xl min-h-[300px]"
+                onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
               />
             </div>
           </div>

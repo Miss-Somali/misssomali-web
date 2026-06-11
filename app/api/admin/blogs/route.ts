@@ -3,6 +3,50 @@ import { prisma } from "@/lib/db";
 import { verifyAdmin, logAdminAction } from "@/lib/admin-auth";
 import { ActionType, TargetType } from "@prisma/client";
 
+async function generateUniqueSlug(title: string, currentBlogId?: string): Promise<string> {
+  let baseSlug = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // remove non-word chars
+    .replace(/[\s_-]+/g, "-") // replace spaces/hyphens with single hyphen
+    .replace(/^-+|-+$/g, "");  // trim hyphens
+
+  if (!baseSlug) {
+    baseSlug = "post";
+  }
+
+  let slug = baseSlug;
+  let counter = 1;
+  while (true) {
+    const existing = await prisma.blog.findFirst({
+      where: {
+        slug,
+        id: currentBlogId ? { not: currentBlogId } : undefined,
+      },
+    });
+    if (!existing) {
+      break;
+    }
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return slug;
+}
+
+function generateExcerpt(htmlContent: string): string {
+  if (!htmlContent) return "";
+  // Strip HTML tags using regex
+  const plainText = htmlContent
+    .replace(/<[^>]*>/g, " ")      // Replace HTML tags with space
+    .replace(/\s+/g, " ")          // Collapse multiple spaces
+    .trim();
+  
+  if (plainText.length <= 180) {
+    return plainText;
+  }
+  return plainText.substring(0, 177) + "...";
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { error, status } = await verifyAdmin();
@@ -41,26 +85,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error }, { status: status || 401 });
     }
 
-    const { title, slug, excerpt, content, coverImage, author, status: postStatus } = await request.json();
+    const { title, content, coverImage, author, status: postStatus } = await request.json();
 
-    if (!title || !slug || !content || !coverImage || !author) {
+    if (!title || !content || !coverImage || !author) {
       return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
-    // Check slug uniqueness
-    const existingBlog = await prisma.blog.findUnique({
-      where: { slug },
-    });
-
-    if (existingBlog) {
-      return NextResponse.json({ error: "Blog post with this slug already exists" }, { status: 400 });
-    }
+    const generatedSlug = await generateUniqueSlug(title);
+    const generatedExcerpt = generateExcerpt(content);
 
     const newBlog = await prisma.blog.create({
       data: {
         title,
-        slug,
-        excerpt: excerpt || null,
+        slug: generatedSlug,
+        excerpt: generatedExcerpt,
         content,
         coverImage,
         author,
@@ -73,9 +111,9 @@ export async function POST(request: NextRequest) {
     await logAdminAction(
       session.user.id,
       ActionType.publish,
-      TargetType.media, // since Blog doesn't have a direct target type in schema, media is closest or update
+      TargetType.media,
       newBlog.id,
-      { title, slug }
+      { title, slug: generatedSlug }
     );
 
     return NextResponse.json(newBlog);
@@ -92,7 +130,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error }, { status: status || 401 });
     }
 
-    const { id, title, slug, excerpt, content, coverImage, author, status: postStatus } = await request.json();
+    const { id, title, content, coverImage, author, status: postStatus } = await request.json();
 
     if (!id) {
       return NextResponse.json({ error: "Blog ID required" }, { status: 400 });
@@ -106,22 +144,22 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Blog post not found" }, { status: 404 });
     }
 
-    // Check slug uniqueness if it is changing
-    if (slug && slug !== existingBlog.slug) {
-      const slugCollision = await prisma.blog.findUnique({
-        where: { slug },
-      });
-      if (slugCollision) {
-        return NextResponse.json({ error: "Blog post with this slug already exists" }, { status: 400 });
-      }
+    let updatedSlug = existingBlog.slug;
+    if (title !== undefined && title !== existingBlog.title) {
+      updatedSlug = await generateUniqueSlug(title, id);
+    }
+
+    let updatedExcerpt = existingBlog.excerpt;
+    if (content !== undefined) {
+      updatedExcerpt = generateExcerpt(content);
     }
 
     const updatedBlog = await prisma.blog.update({
       where: { id },
       data: {
         title: title !== undefined ? title : existingBlog.title,
-        slug: slug !== undefined ? slug : existingBlog.slug,
-        excerpt: excerpt !== undefined ? excerpt : existingBlog.excerpt,
+        slug: updatedSlug,
+        excerpt: updatedExcerpt,
         content: content !== undefined ? content : existingBlog.content,
         coverImage: coverImage !== undefined ? coverImage : existingBlog.coverImage,
         author: author !== undefined ? author : existingBlog.author,

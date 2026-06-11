@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const fetchProfile = useCallback(async () => {
     try {
-      const res = await fetch("/api/auth/role");
+      const res = await fetch("/api/auth/role", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated && data.role === "admin") {

@@ -12,6 +12,7 @@ export async function middleware(request: NextRequest) {
       // Make a fetch request to our internal role checking endpoint
       const roleCheckUrl = new URL('/api/auth/role', request.url);
       const res = await fetch(roleCheckUrl, {
+        cache: 'no-store',
         headers: {
           cookie: cookieHeader,
         },
@@ -57,6 +58,7 @@ export async function middleware(request: NextRequest) {
       const cookieHeader = request.headers.get('cookie') || '';
       const roleCheckUrl = new URL('/api/auth/role', request.url);
       const res = await fetch(roleCheckUrl, {
+        cache: 'no-store',
         headers: {
           cookie: cookieHeader,
         },

@@ -30,7 +30,7 @@ export default function SettingsPage() {
     setLoading(true);
     try {
       // 1. Fetch profile/role info
-      const profileRes = await fetch("/api/auth/role");
+      const profileRes = await fetch("/api/auth/role", { cache: "no-store" });
       let profileData = null;
       if (profileRes.ok) {
         profileData = await profileRes.json();

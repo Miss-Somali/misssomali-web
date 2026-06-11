@@ -5,7 +5,6 @@ import {
   Loader2,
   Calendar,
   MapPin,
-  Trophy,
   Upload,
   Link as LinkIcon,
   Image as ImageIcon,
@@ -304,7 +303,7 @@ export default function GrandFinaleSettingsPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-heading-5 font-bold text-dark dark:text-white flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-[#E8C97A]" /> Grand Finale Settings
+            <Calendar className="h-6 w-6 text-primary" /> Grand Finale Settings
           </h1>
           <p className="mt-1 text-sm text-dark-6">
             Manage the official Grand Finale event details, countdown schedule, featured contestants, and public visibility settings.

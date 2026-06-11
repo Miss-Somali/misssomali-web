@@ -71,7 +71,7 @@ export default function Hero() {
 
               {/* Main Headline */}
               <motion.h1 
-                className="text-[38px] lg:text-[58px] font-extrabold text-white tracking-[-0.02em] leading-[1.15] text-center lg:text-left"
+                className="text-[38px] lg:text-[58px] font-bold text-white tracking-[-0.02em] leading-[1.15] text-center lg:text-left"
                 variants={itemVariants}
               >
                 Miss Somali Is Searching For Its Next Queen.

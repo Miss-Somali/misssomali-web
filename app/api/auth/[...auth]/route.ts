@@ -14,7 +14,29 @@ export async function GET(
     path: arrayVal,
     all: arrayVal
   };
-  return handler.GET(request, { params: Promise.resolve(mockParams) });
+  const response = await handler.GET(request, { params: Promise.resolve(mockParams) });
+
+  if (arrayVal.includes("sign-out")) {
+    const newHeaders = new Headers(response.headers);
+    const deleteCookies = [
+      "neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Secure-neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Secure-neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Host-neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Host-neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax"
+    ];
+    for (const cookie of deleteCookies) {
+      newHeaders.append("Set-Cookie", cookie);
+    }
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders
+    });
+  }
+
+  return response;
 }
 
 export async function POST(
@@ -28,5 +50,27 @@ export async function POST(
     path: arrayVal,
     all: arrayVal
   };
-  return handler.POST(request, { params: Promise.resolve(mockParams) });
+  const response = await handler.POST(request, { params: Promise.resolve(mockParams) });
+
+  if (arrayVal.includes("sign-out")) {
+    const newHeaders = new Headers(response.headers);
+    const deleteCookies = [
+      "neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Secure-neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Secure-neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Host-neon_auth.session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax",
+      "__Host-neon_auth.session_data=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Lax"
+    ];
+    for (const cookie of deleteCookies) {
+      newHeaders.append("Set-Cookie", cookie);
+    }
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders
+    });
+  }
+
+  return response;
 }

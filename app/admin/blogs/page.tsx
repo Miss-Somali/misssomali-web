@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Loader2,
   FileText,
@@ -11,13 +12,15 @@ import {
   XCircle,
   Link as LinkIcon,
   User,
+  Image as ImageIcon,
+  Search,
+  Calendar,
+  RefreshCw,
 } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -38,25 +41,18 @@ interface Blog {
   status: string;
   publishedAt: string | null;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function BlogsPage() {
+  const router = useRouter();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  // Dialog state
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    slug: "",
-    excerpt: "",
-    content: "",
-    coverImage: "",
-    author: "",
-    isPublished: false,
-  });
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Delete confirm dialog
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -80,91 +76,6 @@ export default function BlogsPage() {
   useEffect(() => {
     fetchBlogs();
   }, [fetchBlogs]);
-
-  // Handle Title input change to auto-fill Slug
-  const handleTitleChange = (title: string) => {
-    const generatedSlug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    setFormData((prev) => ({
-      ...prev,
-      title,
-      // Only auto-generate slug if the user hasn't modified it manually or it's empty
-      slug: prev.slug === "" || prev.slug === prev.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-        ? generatedSlug
-        : prev.slug,
-    }));
-  };
-
-  // Open Dialog for Create
-  const handleOpenCreate = () => {
-    setSelectedBlog(null);
-    setFormData({
-      title: "",
-      slug: "",
-      excerpt: "",
-      content: "",
-      coverImage: "",
-      author: "",
-      isPublished: false,
-    });
-    setDialogOpen(true);
-  };
-
-  // Open Dialog for Edit
-  const handleOpenEdit = (blog: Blog) => {
-    setSelectedBlog(blog);
-    setFormData({
-      title: blog.title,
-      slug: blog.slug,
-      excerpt: blog.excerpt || "",
-      content: blog.content,
-      coverImage: blog.coverImage,
-      author: blog.author,
-      isPublished: blog.status === "published",
-    });
-    setDialogOpen(true);
-  };
-
-  // Handle Save
-  const handleSaveBlog = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setActionLoading(true);
-    try {
-      const payload = {
-        title: formData.title,
-        slug: formData.slug,
-        excerpt: formData.excerpt,
-        content: formData.content,
-        coverImage: formData.coverImage,
-        author: formData.author,
-        status: formData.isPublished ? "published" : "draft",
-      };
-
-      const method = selectedBlog ? "PUT" : "POST";
-      const body = selectedBlog ? { id: selectedBlog.id, ...payload } : payload;
-
-      const res = await fetch("/api/admin/blogs", {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        setDialogOpen(false);
-        await fetchBlogs();
-      } else {
-        const err = await res.json();
-        alert(err.error || "Failed to save blog post");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("An error occurred while saving the blog post.");
-    } finally {
-      setActionLoading(false);
-    }
-  };
 
   // Toggle publish status directly
   const handleTogglePublish = async (blog: Blog) => {
@@ -206,6 +117,14 @@ export default function BlogsPage() {
     }
   };
 
+  const filteredBlogs = blogs.filter((blog) => {
+    const matchesSearch =
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || blog.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
   if (loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
@@ -216,6 +135,7 @@ export default function BlogsPage() {
 
   return (
     <>
+      {/* Header Panel */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-heading-5 font-bold text-dark dark:text-white flex items-center gap-2">
@@ -226,86 +146,142 @@ export default function BlogsPage() {
           </p>
         </div>
         <div>
-          <Button onClick={handleOpenCreate} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" /> Write Article
+          <Button onClick={() => router.push("/admin/blogs/new")} className="flex items-center gap-2 bg-primary hover:bg-opacity-90 font-bold">
+            <Plus className="h-4 w-4" /> New Article
           </Button>
         </div>
       </div>
 
-      <div className="rounded-[10px] bg-white shadow-1 dark:bg-gray-dark">
-        {blogs.length === 0 ? (
+      {/* Filter and Search Bar */}
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center justify-between">
+        <div className="relative w-full max-w-md">
+          <span className="absolute inset-y-0 left-3 flex items-center text-dark-6">
+            <Search className="h-4 w-4" />
+          </span>
+          <Input
+            type="text"
+            placeholder="Search articles by title or author..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 h-11 bg-white dark:bg-dark-2 rounded-xl"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="h-11 rounded-xl border border-stroke bg-white px-4 text-sm outline-none focus:border-primary dark:border-dark-3 dark:bg-dark-2 text-dark dark:text-white font-medium cursor-pointer min-w-[150px]"
+          >
+            <option value="all">All Statuses</option>
+            <option value="published">Published</option>
+            <option value="draft">Drafts</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Table List Card */}
+      <div className="rounded-[10px] bg-white shadow-1 dark:bg-[#081325] border border-stroke dark:border-dark-3 overflow-hidden">
+        {filteredBlogs.length === 0 ? (
           <div className="py-20 text-center text-dark-6">
-            <p>No blog articles created yet.</p>
+            <p className="font-medium text-sm">No blog articles match your filters.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-stroke dark:border-dark-3">
-                  <th className="px-6 py-4 text-left font-medium text-dark-6">Article</th>
-                  <th className="px-6 py-4 text-left font-medium text-dark-6">Slug</th>
-                  <th className="px-6 py-4 text-left font-medium text-dark-6">Author</th>
-                  <th className="px-6 py-4 text-left font-medium text-dark-6">Status</th>
-                  <th className="px-6 py-4 text-left font-medium text-dark-6">Published Date</th>
-                  <th className="px-6 py-4 text-right font-medium text-dark-6">Actions</th>
+                <tr className="border-b border-stroke dark:border-dark-3 bg-gray-50 dark:bg-dark-2/40">
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px] w-28">Thumbnail</th>
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px]">Title</th>
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px]">Status</th>
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px]">Author</th>
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px]">Published Date</th>
+                  <th className="px-6 py-4.5 text-left font-semibold text-dark-6 uppercase tracking-wider text-[10px]">Last Updated</th>
+                  <th className="px-6 py-4.5 text-right font-semibold text-dark-6 uppercase tracking-wider text-[10px] w-28">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {blogs.map((blog) => (
+                {filteredBlogs.map((blog) => (
                   <tr
                     key={blog.id}
-                    className="border-b border-stroke last:border-0 hover:bg-gray-1 dark:border-dark-3 dark:hover:bg-dark-2"
+                    className="border-b border-stroke last:border-0 hover:bg-gray-50 dark:border-dark-3 dark:hover:bg-dark-2/30 transition-colors duration-150"
                   >
-                    <td className="px-6 py-4 font-medium text-dark dark:text-white">
-                      <div>
-                        <p className="font-semibold">{blog.title}</p>
-                        <p className="text-xs text-dark-6 line-clamp-1 max-w-[250px]">{blog.excerpt || "—"}</p>
+                    <td className="px-6 py-4">
+                      <div className="relative h-10 w-16 rounded-lg overflow-hidden border border-stroke dark:border-dark-3 bg-gray-100 flex items-center justify-center text-dark-6">
+                        {blog.coverImage ? (
+                          <Image
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <ImageIcon className="h-4 w-4 opacity-40" />
+                        )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-dark-6 font-mono text-xs">
-                      <span className="flex items-center gap-1">
-                        <LinkIcon className="h-3 w-3 text-dark-6" />
-                        {blog.slug}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-dark-6">
-                      <span className="flex items-center gap-1.5">
-                        <User className="h-4 w-4 text-dark-6" />
-                        {blog.author}
-                      </span>
+                    <td className="px-6 py-4 font-semibold text-dark dark:text-white">
+                      <div>
+                        <p className="line-clamp-2 max-w-[280px]">{blog.title}</p>
+                        <p className="text-[10px] text-dark-6 font-mono mt-0.5 flex items-center gap-1 font-normal">
+                          <LinkIcon className="h-3 w-3" />
+                          /{blog.slug}
+                        </p>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <button
                         onClick={() => handleTogglePublish(blog)}
-                        className="cursor-pointer transition-opacity hover:opacity-80"
+                        className="cursor-pointer transition-opacity hover:opacity-85"
+                        title="Click to toggle status"
                       >
                         {blog.status === "published" ? (
-                          <Badge variant="default" className="bg-emerald-600 text-white">
-                            <CheckCircle className="mr-1 h-3.5 w-3.5" /> Published
+                          <Badge variant="default" className="bg-emerald-600 text-white border-none text-[10px] px-2 py-0.5 font-bold uppercase">
+                            <CheckCircle className="mr-1 h-3 w-3" /> Published
                           </Badge>
                         ) : (
-                          <Badge variant="secondary">
-                            <XCircle className="mr-1 h-3.5 w-3.5 text-dark-6" /> Draft
+                          <Badge variant="secondary" className="border-none text-[10px] px-2 py-0.5 font-bold uppercase bg-gray-2 text-dark-5 dark:bg-dark-3 dark:text-dark-6">
+                            <XCircle className="mr-1 h-3 w-3 opacity-60" /> Draft
                           </Badge>
                         )}
                       </button>
                     </td>
+                    <td className="px-6 py-4 text-dark-5 dark:text-dark-6 font-medium">
+                      <span className="flex items-center gap-1.5">
+                        <User className="h-3.5 w-3.5 opacity-60" />
+                        {blog.author}
+                      </span>
+                    </td>
                     <td className="px-6 py-4 text-dark-6">
-                      {blog.publishedAt
-                        ? new Date(blog.publishedAt).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "—"}
+                      <span className="flex items-center gap-1.5 text-xs">
+                        <Calendar className="h-3.5 w-3.5 opacity-50" />
+                        {blog.publishedAt
+                          ? new Date(blog.publishedAt).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })
+                          : "—"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-dark-6">
+                      <span className="flex items-center gap-1.5 text-xs">
+                        <RefreshCw className="h-3.5 w-3.5 opacity-50" />
+                        {new Date(blog.updatedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-8 w-8 text-dark-6"
-                          onClick={() => handleOpenEdit(blog)}
+                          className="h-8 w-8 text-dark-6 border-stroke dark:border-dark-3"
+                          onClick={() => router.push(`/admin/blogs/${blog.id}`)}
+                          title="Edit article"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -317,6 +293,7 @@ export default function BlogsPage() {
                             setBlogToDelete(blog);
                             setDeleteDialogOpen(true);
                           }}
+                          title="Delete article"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -329,112 +306,6 @@ export default function BlogsPage() {
           </div>
         )}
       </div>
-
-      {/* Create / Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{selectedBlog ? "Edit Article" : "Write Article"}</DialogTitle>
-            <DialogDescription>
-              Write details for the public Miss Somali blog post.
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSaveBlog} className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="blogTitle">Title</Label>
-                <Input
-                  id="blogTitle"
-                  value={formData.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="e.g. Official Launch Event Announced"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="blogSlug">Slug (URL Path)</Label>
-                <Input
-                  id="blogSlug"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="e.g. official-launch-event"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="blogAuthor">Author</Label>
-                <Input
-                  id="blogAuthor"
-                  value={formData.author}
-                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  placeholder="e.g. Miss Somali Team"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="blogCover">Cover Image URL</Label>
-                <Input
-                  id="blogCover"
-                  value={formData.coverImage}
-                  onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                  placeholder="https://..."
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="blogExcerpt">Excerpt / Short Teaser</Label>
-              <Textarea
-                id="blogExcerpt"
-                value={formData.excerpt}
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                placeholder="A brief teaser paragraph to display on listings..."
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="blogContent">Content Body</Label>
-              <Textarea
-                id="blogContent"
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Write the main article content here..."
-                rows={8}
-                required
-              />
-            </div>
-
-            <div className="flex items-center space-x-2 pt-1">
-              <Checkbox
-                id="blogPublish"
-                checked={formData.isPublished}
-                onCheckedChange={(checked) => setFormData({ ...formData, isPublished: !!checked })}
-              />
-              <Label htmlFor="blogPublish" className="cursor-pointer">
-                Publish Article Immediately
-              </Label>
-            </div>
-
-            <DialogFooter className="mt-6">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={actionLoading}>
-                {actionLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {selectedBlog ? "Save Changes" : "Create Post"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       {/* Delete Confirm Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

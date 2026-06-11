@@ -3,11 +3,24 @@ import { prisma } from "@/lib/db";
 import { verifyAdmin, logAdminAction } from "@/lib/admin-auth";
 import { ActionType, TargetType } from "@prisma/client";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const { error, status } = await verifyAdmin();
     if (error) {
       return NextResponse.json({ error }, { status });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (id) {
+      const blog = await prisma.blog.findUnique({
+        where: { id },
+      });
+      if (!blog) {
+        return NextResponse.json({ error: "Blog post not found" }, { status: 404 });
+      }
+      return NextResponse.json(blog);
     }
 
     const blogs = await prisma.blog.findMany({

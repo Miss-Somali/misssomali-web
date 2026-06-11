@@ -95,7 +95,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           image: profile.profilePhotoUrl,
         }}
         profileUrl="/portal/profile"
-        settingsUrl="/portal/settings"
         onSignOut={handleSignOut}
       >
         {children}

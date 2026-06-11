@@ -18,7 +18,7 @@ type HeaderProps = {
   };
   onSignOut: () => void;
   profileUrl: string;
-  settingsUrl: string;
+  settingsUrl?: string;
 };
 
 export function Header({

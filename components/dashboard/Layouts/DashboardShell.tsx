@@ -13,7 +13,7 @@ type DashboardShellProps = {
     image?: string;
   };
   profileUrl: string;
-  settingsUrl: string;
+  settingsUrl?: string;
   onSignOut: () => void;
 };
 

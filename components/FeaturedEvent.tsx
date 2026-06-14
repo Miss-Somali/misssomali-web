@@ -50,7 +50,7 @@ export default function FeaturedEvent() {
   return (
     <section
       id="grand-finale"
-      className="relative w-full py-24 md:py-32 overflow-hidden bg-gradient-to-b from-[#0B2D6B] via-[#0D3A8A] to-[#071E4A] flex items-center border-t border-white/5"
+      className="relative w-full py-24 md:py-32 overflow-hidden bg-[#FFFFFF] flex items-center border-b border-[#0B2D6B]/5"
     >
       {/* Background spotlights, ambient glows, and clean gold-accented grid lines */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
@@ -59,11 +59,11 @@ export default function FeaturedEvent() {
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-[#E8C97A]/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Ambient radial vignette mapping */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#071E4A_95%)] z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#FFFFFF_95%)] z-10 pointer-events-none" />
 
         {/* Fine gold-accented grid pattern */}
-        <div className="absolute inset-0 opacity-15 pointer-events-none z-15" style={{
-          backgroundImage: `linear-gradient(to right, rgba(232, 201, 122, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(232, 201, 122, 0.08) 1px, transparent 1px)`,
+        <div className="absolute inset-0 opacity-20 pointer-events-none z-15" style={{
+          backgroundImage: `linear-gradient(to right, rgba(232, 201, 122, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(232, 201, 122, 0.1) 1px, transparent 1px)`,
           backgroundSize: '45px 45px'
         }} />
       </div>
@@ -81,7 +81,7 @@ export default function FeaturedEvent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="text-[34px] sm:text-[44px] md:text-[54px] font-semibold text-white tracking-tight leading-[1.12] mb-6"
+                className="text-[34px] sm:text-[44px] md:text-[54px] font-semibold text-[#0B2D6B] tracking-tight leading-[1.12] mb-6"
               >
                 {title}
               </motion.h2>
@@ -92,12 +92,10 @@ export default function FeaturedEvent() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" }}
-                className="text-[15px] sm:text-[16px] font-light text-[#F5F0E8]/75 leading-relaxed max-w-[480px] mb-8"
+                className="text-[15px] sm:text-[16px] font-light text-[#071E4A]/80 leading-relaxed max-w-[480px] mb-8"
               >
                 {slogan}
               </motion.p>
-
-
 
               {/* Event Details (Date & Location Row) */}
               <motion.div
@@ -107,12 +105,12 @@ export default function FeaturedEvent() {
                  transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
                  className="flex flex-wrap justify-center lg:justify-start gap-x-10 gap-y-4 mb-10 w-full"
               >
-                 <div className="flex flex-col items-center lg:items-start text-[#F5F0E8]">
-                   <span className="text-[10px] uppercase tracking-widest text-[#E8C97A] font-medium mb-1.5">Location</span>
+                 <div className="flex flex-col items-center lg:items-start text-[#071E4A]">
+                   <span className="text-[10px] uppercase tracking-widest text-[#b08f37] font-semibold mb-1.5">Location</span>
                    <span className="text-[15px] font-semibold">{location}</span>
                  </div>
-                 <div className="flex flex-col items-center lg:items-start text-[#F5F0E8]">
-                   <span className="text-[10px] uppercase tracking-widest text-[#E8C97A] font-medium mb-1.5">Date</span>
+                 <div className="flex flex-col items-center lg:items-start text-[#071E4A]">
+                   <span className="text-[10px] uppercase tracking-widest text-[#b08f37] font-semibold mb-1.5">Date</span>
                    <span className="text-[15px] font-semibold">{date}</span>
                  </div>
               </motion.div>
@@ -128,7 +126,7 @@ export default function FeaturedEvent() {
                 <PrimaryButton href={ticketLink} target={ticketLink.startsWith("http") ? "_blank" : undefined}>
                   Get Tickets & Packages
                 </PrimaryButton>
-                <SecondaryButton href="#journey">
+                <SecondaryButton href="#journey" className="!bg-[#0B2D6B]/5 hover:!bg-[#0B2D6B]/10 !text-[#0B2D6B] !border-[#0B2D6B]/15">
                   Learn More
                 </SecondaryButton>
               </motion.div>
@@ -144,7 +142,7 @@ export default function FeaturedEvent() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="relative aspect-[16/9] w-full max-w-[700px] rounded-[24px] overflow-hidden border border-white/10 bg-[#071E4A]/30 backdrop-blur-sm group"
+                className="relative aspect-[16/9] w-full max-w-[700px] rounded-[24px] overflow-hidden border border-[#0B2D6B]/10 bg-[#FFFFFF] shadow-xl shadow-black/5 group"
               >
                 {/* Glowing hover light overlay */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#E8C97A]/0 via-[#E8C97A]/5 to-[#E8C97A]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-20" />

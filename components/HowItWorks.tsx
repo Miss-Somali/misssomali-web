@@ -78,14 +78,14 @@ export default function HowItWorks() {
               {steps.map((step, stepIdx) => (
                 <motion.div 
                   key={step.title} 
-                  className="relative flex flex-col group"
+                  className="relative flex flex-col items-center group"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: stepIdx * 0.1 }}
                 >
                   {/* Timeline Node and Connecting Line */}
-                  <div className="relative flex items-center mb-8 z-10">
+                  <div className="relative flex items-center justify-center w-full mb-8 z-10">
                     
                     {/* Node */}
                     <div className="relative flex h-14 w-14 flex-none items-center justify-center bg-white border-2 border-[#0B2D6B]/20 rounded-full shadow-sm z-10 transition-all duration-500 group-hover:border-[#0B2D6B] group-hover:shadow-md group-hover:scale-110">
@@ -99,7 +99,8 @@ export default function HowItWorks() {
                     
                     {/* Base Connecting Line (Light Gray) */}
                     <div className={`
-                      absolute left-14 right-[-2rem] lg:right-[-3rem] top-1/2 h-[2px] -translate-y-1/2 bg-slate-100 z-0
+                      absolute left-1/2 top-1/2 h-[2px] -translate-y-1/2 bg-slate-100 z-0
+                      w-[calc(100%+2rem)] lg:w-[calc(100%+3rem)]
                       ${stepIdx === steps.length - 1 ? 'hidden' : 'block'}
                       ${(stepIdx + 1) % 3 === 0 ? 'lg:hidden' : ''}
                       ${(stepIdx + 1) % 2 === 0 ? 'md:hidden lg:block' : ''}
@@ -108,12 +109,12 @@ export default function HowItWorks() {
                     {/* Animated Fill Line (Blue) - Fills on scroll */}
                     <motion.div 
                       className={`
-                        absolute left-14 top-1/2 h-[2px] -translate-y-1/2 bg-gradient-to-r from-[#0B2D6B] to-[#0B2D6B]/50 z-0 origin-left
+                        absolute left-1/2 top-1/2 h-[2px] -translate-y-1/2 bg-gradient-to-r from-[#0B2D6B] to-[#0B2D6B]/50 z-0 origin-left
+                        w-[calc(100%+2rem)] lg:w-[calc(100%+3rem)]
                         ${stepIdx === steps.length - 1 ? 'hidden' : 'block'}
                         ${(stepIdx + 1) % 3 === 0 ? 'lg:hidden' : ''}
                         ${(stepIdx + 1) % 2 === 0 ? 'md:hidden lg:block' : ''}
                       `} 
-                      style={{ right: 'calc(-2rem)' }} // Set base right bounds
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: true, margin: "-100px" }}
@@ -122,14 +123,14 @@ export default function HowItWorks() {
                   </div>
                   
                   {/* Step Content */}
-                  <div className="pr-4 transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="flex flex-col items-center text-center transition-transform duration-500 group-hover:-translate-y-1">
                     <span className="text-[12px] font-bold tracking-[0.2em] text-[#0B2D6B] uppercase mb-3 block">
                       Step {step.number}
                     </span>
                     <h3 className="text-[22px] sm:text-[26px] font-semibold leading-[1.2] text-black tracking-tight mb-4">
                       {step.title}
                     </h3>
-                    <p className="text-[16px] leading-[1.7] text-slate-500 font-light max-w-[320px]">
+                    <p className="text-[16px] leading-[1.7] text-slate-500 font-light max-w-[320px] mx-auto">
                       {step.description}
                     </p>
                     
@@ -137,7 +138,7 @@ export default function HowItWorks() {
                     {step.hasApplyLink && (
                       <Link 
                         href="/portal" 
-                        className="inline-flex items-center gap-2 mt-6 text-[#2563EB] font-semibold text-sm group/link overflow-hidden relative pb-1"
+                        className="inline-flex items-center justify-center gap-2 mt-6 text-[#2563EB] font-semibold text-sm group/link overflow-hidden relative pb-1"
                       >
                         <span className="relative z-10">Apply Now</span>
                         <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/link:translate-x-1" />

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import PillBadge from "@/components/ui/PillBadge";
 
 interface Step {
   number: string;
@@ -75,9 +76,9 @@ export default function HowItWorks() {
         {/* ========================================================================= */}
         <div className="text-center mb-16 md:mb-20 flex flex-col items-center">
           {/* Rounded Pill Label - matches screenshot */}
-          <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-slate-200 bg-white text-slate-800 text-[12px] font-medium uppercase tracking-wider mb-6">
+          <PillBadge className="mb-6">
             How it works
-          </div>
+          </PillBadge>
           
           {/* Large Editorial Heading */}
           <h2 className="text-[28px] sm:text-[36px] md:text-[42px] font-semibold text-[#071E4A] tracking-tight leading-[1.15] max-w-4xl mb-4">

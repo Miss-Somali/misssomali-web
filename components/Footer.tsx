@@ -32,20 +32,20 @@ export default function Footer({ className }: FooterProps) {
 
   const contactInfo = [
     { text: "info@misssomali.com", href: "mailto:info@misssomali.com", icon: Mail },
-    { text: "+252 (61) 555-0199", href: "tel:+252615550199", icon: Phone },
-    { text: "Mogadishu, Somalia", href: "#", icon: MapPin },
+    { text: "+254 (61) 555-0199", href: "tel:+252615550199", icon: Phone },
+    { text: "Nairobi, Kenya", href: "#", icon: MapPin },
   ];
 
   // If a custom className is passed, use it; otherwise use the default dark blue brand gradient
-  const wrapperClass = className !== undefined 
-    ? className 
+  const wrapperClass = className !== undefined
+    ? className
     : "bg-gradient-to-b from-[#0D3A8A] to-[#071E4A] border-t border-white/5";
 
   return (
     <footer className={`text-[#F5F0E8]/75 font-sans transition-all duration-300 ${wrapperClass}`}>
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
         <div className="grid grid-cols-12 gap-y-12 md:gap-y-0 lg:gap-x-12">
-          
+
           {/* Column 1: Brand & Logo */}
           <div className="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col pr-0 lg:pr-8">
             <Link href="/" className="inline-block mb-5">

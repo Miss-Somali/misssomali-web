@@ -6,13 +6,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
-import FeaturedEvent from "@/components/FeaturedEvent";
+import GrandFinaleEvent from "@/components/GrandFinaleEvent";
 import BlogsSection from "@/components/BlogsSection";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import SecondaryButton from "@/components/ui/SecondaryButton";
+import PillBadge from "@/components/ui/PillBadge";
 
 const contentFadeVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -250,11 +251,9 @@ export default function Home() {
                 variants={aboutLeftVariants}
               >
                 {/* Pill Badge */}
-                <div className="mb-6">
-                  <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#0B2D6B] bg-[#0B2D6B]/10 border border-[#0B2D6B]/20 px-3.5 py-1 rounded-full inline-block">
-                    About Miss Somali
-                  </span>
-                </div>
+                <PillBadge className="mb-6">
+                  About Miss Somali
+                </PillBadge>
                 
                 {/* Impressive Section Title */}
                 <h2 className="text-[32px] sm:text-[42px] font-semibold text-[#0B2D6B] tracking-tight leading-[1.15] mb-6">
@@ -343,9 +342,9 @@ export default function Home() {
                 viewport={{ once: true, margin: "-100px" }}
                 variants={contentFadeVariants}
               >
-                <span className="text-[12px] font-medium tracking-[0.02em] leading-[1.7] text-[#E8C97A] block mb-2">
+                <PillBadge variant="gold" className="mb-6">
                   Miss Somali 2026
-                </span>
+                </PillBadge>
                 <h2 className="text-[28px] lg:text-[40px] font-semibold text-[#FFFFFF] tracking-[-0.02em] leading-[1.15] mb-6">
                   Meet The Contestants
                 </h2>
@@ -396,7 +395,7 @@ export default function Home() {
 
         <HowItWorks />
 
-        <FeaturedEvent />
+        <GrandFinaleEvent />
 
 
 

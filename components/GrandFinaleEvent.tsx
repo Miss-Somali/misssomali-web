@@ -222,18 +222,19 @@ export default function GrandFinaleEvent() {
                 </div>
               </div>
 
-              {/* Right Column: Pop-out Image Poster */}
+              {/* Right Column: Free-Floating Image */}
               <div className="relative z-50 w-full lg:w-[45%] flex items-center justify-center p-6 lg:p-0 lg:pr-10">
                 
-                {/* Floating Image Wrapper */}
-                <div className="relative w-full max-w-md lg:max-w-none lg:w-[145%] lg:-mt-16 aspect-[16/10] sm:aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_30px_60px_rgba(11,45,107,0.3)] transition-all duration-[800ms] ease-out group-hover:-translate-y-12 group-hover:scale-[1.03] group-hover:shadow-[0_50px_100px_rgba(11,45,107,0.5)] lg:translate-x-10">
+                {/* Unconstrained Floating Image */}
+                <div className="relative w-full max-w-md lg:max-w-none lg:w-[145%] lg:-mt-16 lg:translate-x-10 transition-all duration-[800ms] ease-out group-hover:-translate-y-12 group-hover:scale-[1.03]">
                   
                   <Image
                     src={event.coverImage}
                     alt={event.title}
-                    fill
+                    width={1200}
+                    height={1200}
                     priority
-                    className="object-cover object-center transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                    className="w-full h-auto object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                     sizes="(max-w-1024px) 100vw, 40vw"
                   />
                   

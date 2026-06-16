@@ -499,17 +499,6 @@ export default function ApplicationDetailPage({ params }: PageProps) {
                 </Select>
               </div>
 
-              <div>
-                <label className="mb-2 block text-sm font-medium text-dark dark:text-white">
-                  Review Notes / Notification Message
-                </label>
-                <Textarea
-                  placeholder="Provide feedback or reasons for status change... This will be sent to the applicant."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={4}
-                />
-              </div>
 
               <Button
                 className="w-full"
